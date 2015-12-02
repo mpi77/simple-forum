@@ -1,0 +1,24 @@
+FORMAT: 1A
+
+# pwx
+
+PWX RESTful API
+
+## Thread collection [/threads]
+
+### List all Threads [GET]
++ Response 200 (application/json)
+
+### Create a new Thread [POST]
++ Request (application/json)
++ Response 201 (application/json)
+
+## Thread item [/threads/{thread_id}]
++ Parameters
+    + thread_id (number) - ID of the thread in the form of an integer
+
+### View a thread item [GET]
++ Response 200 (application/json)
+
+### Delete a Thread [DELETE]
++ Response 201 (application/json)
