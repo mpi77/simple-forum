@@ -4,21 +4,272 @@ FORMAT: 1A
 
 PWX RESTful API
 
-## Thread collection [/threads]
+## Thread collection [/threads/{?q}{?e}{?access_code}]
 
 ### List all Threads [GET]
+
++ Parameters
+    + q (required, string) ... Query string in format: (author=int)
+    + access_code (required, string) ... Access code
+    + e (optional, string) ... Expandable string in format: (thread)
+
 + Response 200 (application/json)
+
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/",
+                "mediaType": "application\/json"
+        },
+            "items": [
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/999\/",
+                        "mediaType": "application\/json",
+                        "id": 999
+                    }
+                },
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/999\/",
+                        "mediaType": "application\/json",
+                        "id": 999
+                    }
+                },
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/999\/",
+                        "mediaType": "application\/json",
+                        "id": 999
+                    }
+                }
+            ]
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
 
 ### Create a new Thread [POST]
-+ Request (application/json)
-+ Response 201 (application/json)
 
-## Thread item [/threads/{thread_id}]
 + Parameters
-    + thread_id (number) - ID of the thread in the form of an integer
+    + access_code (required, string) ... Access code
+    
++ Request (application/json)
+
+        {
+            "title": "thread title"
+        }
+
++ Response 201 (application/json)
+        
+        {
+            "msg": "Resource created."
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+        
+## Thread item [/threads/{thread_id}/{?access_code}{?e}]
 
 ### View a thread item [GET]
++ Parameters
+    + thread_id (required, number) - ID of the thread
+    + access_code (required, string) ... Access code
+    + e (optional, string) ... Expandable string in format: (author)
+    
 + Response 200 (application/json)
 
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/999\/",
+                "mediaType": "application\/json",
+                "id": 999,
+                "tsCreate": "2015-01-01T00:00:00.000Z",
+                "tsUpdate": "2015-01-01T00:00:00.000Z",
+                "tsLastChange": "2015-01-01T00:00:00.000Z"
+            },
+            "author": {
+                "_meta": {
+                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+                    "mediaType": "application\/json",
+                    "id": 777
+                }
+            },
+            "title": "thread title"
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+
 ### Delete a Thread [DELETE]
++ Parameters
+    + thread_id (required, number) - ID of the thread
+    + access_code (required, string) ... Access code
+    
 + Response 201 (application/json)
+
+        {
+            "msg": "Resource removed."
+        }
+
+
+## Message collection [/messages/{?q}{?e}{?access_code}]
+
+### List all messages [GET]
+
++ Parameters
+    + q (required, string) ... Query string in format: (thread=int)
+    + access_code (required, string) ... Access code
+    + e (optional, string) ... Expandable string in format: (message)
+
++ Response 200 (application/json)
+
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/messsages\/",
+                "mediaType": "application\/json"
+            },
+            "items": [
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/messsages\/888\/",
+                        "mediaType": "application\/json",
+                        "id": 888
+                    }
+                },
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/messsages\/888\/",
+                        "mediaType": "application\/json",
+                        "id": 888
+                    }
+                },
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/messsages\/888\/",
+                        "mediaType": "application\/json",
+                        "id": 888
+                    }
+                }
+            ]
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+
+### Create a new Message [POST]
+
++ Parameters
+    + access_code (required, string) ... Access code
+    
++ Request (application/json)
+
+        {
+            "author": 777,
+            "thread": 999,
+            "content": "message content"
+        }
+
++ Response 201 (application/json)
+        
+        {
+            "msg": "Resource created."
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+        
+## Message item [/messages/{message_id}/{?access_code}{?e}]
+
+### View a message item [GET]
++ Parameters
+    + message_id (required, number) - ID of the message
+    + access_code (required, string) ... Access code
+    + e (optional, string) ... Expandable string in format: (author)
+    
++ Response 200 (application/json)
+
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/messages\/888\/",
+                "mediaType": "application\/json",
+                "id": 888,
+                "tsCreate": "2015-01-01T00:00:00.000Z",
+                "tsRead": "2015-01-01T00:00:00.000Z"
+            },
+            "author": {
+                "_meta": {
+                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+                    "mediaType": "application\/json",
+                    "id": 777
+                }
+            },
+            "content": "message content"
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+
+### Delete a message [DELETE]
++ Parameters
+    + message_id (required, number) - ID of the message
+    + access_code (required, string) ... Access code
+    
++ Response 201 (application/json)
+
+        {
+            "msg": "Resource removed."
+        }
