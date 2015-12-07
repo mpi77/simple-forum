@@ -417,3 +417,35 @@ PWX RESTful API
         {
             "msg": "Resource removed."
         }
+
+## Access item [/access/]
+
+### Do a signup item and get access_code [POST]
++ Request (application/json)
+
+        {
+            "username": "user",
+            "password": "pass"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/access\/",
+                "mediaType": "application\/json"
+            },
+            "access_token": "...stringACCESStoken..."
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
