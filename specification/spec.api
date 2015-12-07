@@ -435,7 +435,42 @@ PWX RESTful API
                 "href": "https:\/\/api.sf.sd2.cz\/v1\/access\/",
                 "mediaType": "application\/json"
             },
-            "access_token": "...stringACCESStoken..."
+            "access_token": "...stringACCESStoken...",
+            "id" : 777
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+    
+## User item [/users/{user_id}/]
+
+### View a user item [GET]
++ Parameters
+    + user_id (required, number) - ID of the user
+    
++ Response 200 (application/json)
+
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+                "mediaType": "application\/json",
+                "id": 777,
+                "tsCreate": "2015-01-01T00:00:00.000Z",
+                "tsUpdate": "2015-01-01T00:00:00.000Z"
+            },
+            "firstname": "John",
+            "lastname": "Smith",
+            "nick": "js",
+            "email": "js@example.com"
         }
 
 + Response 403 (application/json)
