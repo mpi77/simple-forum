@@ -273,3 +273,147 @@ PWX RESTful API
         {
             "msg": "Resource removed."
         }
+        
+## Thread members collection [/threadMembers/{?q}{?e}{?access_code}]
+
+### List all membership [GET]
+
++ Parameters
+    + q (required, string) ... Query string in format: (thread=int;author=int)
+    + access_code (required, string) ... Access code
+    + e (optional, string) ... Expandable string in format: (thread,author)
+
++ Response 200 (application/json)
+
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/threadMembers\/",
+                "mediaType": "application\/json"
+            },
+            "items": [
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/threadMembers\/666\/",
+                        "mediaType": "application\/json",
+                        "id": 666
+                    }
+                },
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/threadMembers\/666\/",
+                        "mediaType": "application\/json",
+                        "id": 666
+                    }
+                },
+                {
+                    "_meta": {
+                        "href": "https:\/\/api.sf.sd2.cz\/v1\/threadMembers\/666\/",
+                        "mediaType": "application\/json",
+                        "id": 666
+                    }
+                }
+            ]
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+
+### Create a new membership [POST]
+
++ Parameters
+    + access_code (required, string) ... Access code
+    
++ Request (application/json)
+
+        {
+            "author": 777,
+            "thread": 999,
+            "tsFrom": "2015-01-01T00:00:00.000Z",
+            "tsTo": "2015-01-01T00:00:00.000Z"
+        }
+
++ Response 201 (application/json)
+        
+        {
+            "msg": "Resource created."
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+
+## Thread member item [/threadMembers/{threadMember_id}/{?access_code}{?e}]
+
+### View a thread member item [GET]
++ Parameters
+    + threadMember_id (required, number) - ID of the membership
+    + access_code (required, string) ... Access code
+    + e (optional, string) ... Expandable string in format: (author, thread)
+    
++ Response 200 (application/json)
+
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/threadMembers\/666\/",
+                "mediaType": "application\/json",
+                "id": 666,
+                "tsCreate": "2015-01-01T00:00:00.000Z",
+                "tsUpdate": "2015-01-01T00:00:00.000Z",
+                "tsFrom": "2015-01-01T00:00:00.000Z",
+                "tsTo": "2015-01-01T00:00:00.000Z"
+            },
+            "thread": {
+                "_meta": {
+                    "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/999\/",
+                    "mediaType": "application\/json",
+                    "id": 999
+                }
+            },
+            "author": {
+                "_meta": {
+                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+                    "mediaType": "application\/json",
+                    "id": 777
+                }
+            }
+        }
+
++ Response 403 (application/json)
+
+        {
+            "msg": "Forbidden access to resource."
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "msg": "Resource was not found."
+        }
+
+### Delete a message [DELETE]
++ Parameters
+    + threadMember_id (required, number) - ID of the membership
+    + access_code (required, string) ... Access code
+    
++ Response 201 (application/json)
+
+        {
+            "msg": "Resource removed."
+        }
