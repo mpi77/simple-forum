@@ -67,8 +67,8 @@ $single = [
                     "tsUpdate"=>$commons["date"],
             		"tsFrom"=>$commons["date"],
             		"tsTo"=>$commons["date"])),
-            "title" => "task executor title",
-            "status" => "online"
+            "thread" => array("_meta" => metaResource("threads/999/", array("id" => 999))),
+            "author" => array("_meta" => metaResource("users/777/", array("id" => 777)))
         ),
         
         "user" => array(

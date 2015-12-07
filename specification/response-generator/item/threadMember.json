@@ -8,6 +8,18 @@
         "tsFrom": "2015-01-01T00:00:00.000Z",
         "tsTo": "2015-01-01T00:00:00.000Z"
     },
-    "title": "task executor title",
-    "status": "online"
+    "thread": {
+        "_meta": {
+            "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/999\/",
+            "mediaType": "application\/json",
+            "id": 999
+        }
+    },
+    "author": {
+        "_meta": {
+            "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+            "mediaType": "application\/json",
+            "id": 777
+        }
+    }
 }
