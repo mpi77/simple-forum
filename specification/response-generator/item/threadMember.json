@@ -1,0 +1,13 @@
+{
+    "_meta": {
+        "href": "https:\/\/api.sf.sd2.cz\/v1\/threadMembers\/666\/",
+        "mediaType": "application\/json",
+        "id": 666,
+        "tsCreate": "2015-01-01T00:00:00.000Z",
+        "tsUpdate": "2015-01-01T00:00:00.000Z",
+        "tsFrom": "2015-01-01T00:00:00.000Z",
+        "tsTo": "2015-01-01T00:00:00.000Z"
+    },
+    "title": "task executor title",
+    "status": "online"
+}

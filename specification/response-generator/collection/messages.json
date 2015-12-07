@@ -1,0 +1,29 @@
+{
+    "_meta": {
+        "href": "https:\/\/api.sf.sd2.cz\/v1\/messsages\/",
+        "mediaType": "application\/json"
+    },
+    "items": [
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/messsages\/888\/",
+                "mediaType": "application\/json",
+                "id": 888
+            }
+        },
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/messsages\/888\/",
+                "mediaType": "application\/json",
+                "id": 888
+            }
+        },
+        {
+            "_meta": {
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/messsages\/888\/",
+                "mediaType": "application\/json",
+                "id": 888
+            }
+        }
+    ]
+}
