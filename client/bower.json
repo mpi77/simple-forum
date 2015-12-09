@@ -1,0 +1,16 @@
+{
+  "name": "simple-forum",
+  "description": "A simple forum RESTful API client in AngularJS",
+  "version": "0.0.1",
+  "homepage": "https://github.com/mpi77/simple-forum",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "latest",
+    "angular-route": "latest",
+    "angular-loader": "latest",
+    "angular-mocks": "latest",
+    "html5-boilerplate": "latest",
+    "angular-bootstrap": "latest"
+  }
+}
