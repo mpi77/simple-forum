@@ -4,13 +4,16 @@ FORMAT: 1A
 
 PWX RESTful API
 
-## Thread collection [/threads/{?q}{?e}{?access_code}]
+## Thread collection [/threads/{?q}{?e}]
 
 ### List all Threads [GET]
-
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + q (required, string) ... Query string in format: (author=int)
-    + access_code (required, string) ... Access code
     + e (optional, string) ... Expandable string in format: (thread)
 
 + Response 200 (application/json)
@@ -58,15 +61,17 @@ PWX RESTful API
         }
 
 ### Create a new Thread [POST]
-
-+ Parameters
-    + access_code (required, string) ... Access code
-    
 + Request (application/json)
-
-        {
-            "title": "thread title"
-        }
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+            
+    + Body
+    
+            {
+                "title": "thread title"
+            }
+        
 
 + Response 201 (application/json)
         
@@ -86,12 +91,16 @@ PWX RESTful API
             "msg": "Resource was not found."
         }
         
-## Thread item [/threads/{thread_id}/{?access_code}{?e}]
+## Thread item [/threads/{thread_id}/{?e}]
 
 ### View a thread item [GET]
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + thread_id (required, number) - ID of the thread
-    + access_code (required, string) ... Access code
     + e (optional, string) ... Expandable string in format: (author)
     
 + Response 200 (application/json)
@@ -128,9 +137,13 @@ PWX RESTful API
         }
 
 ### Delete a Thread [DELETE]
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + thread_id (required, number) - ID of the thread
-    + access_code (required, string) ... Access code
     
 + Response 201 (application/json)
 
@@ -139,13 +152,16 @@ PWX RESTful API
         }
 
 
-## Message collection [/messages/{?q}{?e}{?access_code}]
+## Message collection [/messages/{?q}{?e}]
 
 ### List all messages [GET]
-
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + q (required, string) ... Query string in format: (thread=int)
-    + access_code (required, string) ... Access code
     + e (optional, string) ... Expandable string in format: (message)
 
 + Response 200 (application/json)
@@ -193,17 +209,19 @@ PWX RESTful API
         }
 
 ### Create a new Message [POST]
-
-+ Parameters
-    + access_code (required, string) ... Access code
     
 + Request (application/json)
-
-        {
-            "author": 777,
-            "thread": 999,
-            "content": "message content"
-        }
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+            
+    + Body
+    
+            {
+                "author": 777,
+                "thread": 999,
+                "content": "message content"
+            }
 
 + Response 201 (application/json)
         
@@ -223,12 +241,16 @@ PWX RESTful API
             "msg": "Resource was not found."
         }
         
-## Message item [/messages/{message_id}/{?access_code}{?e}]
+## Message item [/messages/{message_id}/{?e}]
 
 ### View a message item [GET]
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + message_id (required, number) - ID of the message
-    + access_code (required, string) ... Access code
     + e (optional, string) ... Expandable string in format: (author)
     
 + Response 200 (application/json)
@@ -264,9 +286,13 @@ PWX RESTful API
         }
 
 ### Delete a message [DELETE]
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + message_id (required, number) - ID of the message
-    + access_code (required, string) ... Access code
     
 + Response 201 (application/json)
 
@@ -274,13 +300,16 @@ PWX RESTful API
             "msg": "Resource removed."
         }
         
-## Thread members collection [/threadMembers/{?q}{?e}{?access_code}]
+## Thread members collection [/threadMembers/{?q}{?e}]
 
 ### List all membership [GET]
-
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + q (required, string) ... Query string in format: (thread=int;author=int)
-    + access_code (required, string) ... Access code
     + e (optional, string) ... Expandable string in format: (thread,author)
 
 + Response 200 (application/json)
@@ -328,18 +357,20 @@ PWX RESTful API
         }
 
 ### Create a new membership [POST]
-
-+ Parameters
-    + access_code (required, string) ... Access code
     
 + Request (application/json)
-
-        {
-            "author": 777,
-            "thread": 999,
-            "tsFrom": "2015-01-01T00:00:00.000Z",
-            "tsTo": "2015-01-01T00:00:00.000Z"
-        }
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
+    + Body
+    
+            {
+                "author": 777,
+                "tsRead": 999,
+                "tsFrom": "2015-01-01T00:00:00.000Z",
+                "tsTo": "2015-01-01T00:00:00.000Z"
+            }
 
 + Response 201 (application/json)
         
@@ -359,12 +390,16 @@ PWX RESTful API
             "msg": "Resource was not found."
         }
 
-## Thread member item [/threadMembers/{threadMember_id}/{?access_code}{?e}]
+## Thread member item [/threadMembers/{threadMember_id}/{?e}]
 
 ### View a thread member item [GET]
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + threadMember_id (required, number) - ID of the membership
-    + access_code (required, string) ... Access code
     + e (optional, string) ... Expandable string in format: (author, thread)
     
 + Response 200 (application/json)
@@ -408,9 +443,13 @@ PWX RESTful API
         }
 
 ### Delete a message [DELETE]
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + threadMember_id (required, number) - ID of the membership
-    + access_code (required, string) ... Access code
     
 + Response 201 (application/json)
 
@@ -420,7 +459,7 @@ PWX RESTful API
 
 ## Session item [/session/]
 
-### Do a signup item and get access_code [POST]
+### Create a new session item and get access_token [POST]
 + Request (application/json)
 
         {
@@ -454,6 +493,11 @@ PWX RESTful API
 ## User item [/users/{user_id}/]
 
 ### View a user item [GET]
++ Request
+    + Headers 
+    
+            Authorization: Bearer SOMEtokenCODE
+        
 + Parameters
     + user_id (required, number) - ID of the user
     
