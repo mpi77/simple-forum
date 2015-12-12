@@ -17,7 +17,9 @@
     "protractor": "^2.1.0",
     "shelljs": "^0.2.6",
     "webpack": "~1.12.9",
-    "bower-webpack-plugin": "~0.1.9"
+    "bower-webpack-plugin": "~0.1.9",
+    "babel-loader": "~6.2.0",
+    "babel-core": "~6.3.17"
   },
   "scripts": {
     "postinstall": "bower install",

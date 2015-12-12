@@ -1,21 +1,23 @@
 'use strict';
 
-require("jquery");
-require("bootstrap");
-require("angular");
-require("angular-route");
+import 'jquery';
+import 'bootstrap';
+import 'angular';
+import 'angular-route';
 
-var home = require("./components/home/home.js");
-var session = require("./components/session/session.js");
-var thread = require("./components/thread/thread.js");
-var message = require("./components/message/message.js");
+import './services/auth.js';
+import './components/home/home.js';
+import './components/session/session.js';
+import './components/thread/thread.js';
+import './components/message/message.js';
 
 angular.module('simpleForum', [
   'ngRoute',
   'simpleForum.home',
   'simpleForum.session',
   'simpleForum.thread',
-  'simpleForum.message'
+  'simpleForum.message',
+  'simpleForum.auth'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/home'});

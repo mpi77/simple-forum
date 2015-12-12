@@ -14,6 +14,10 @@ module.exports = {
 	}, {
 	    test : /\.(woff|svg|ttf|eot)([\?]?.*)$/,
 	    loader : "file-loader?name=[name].[ext]"
+	}, {
+	    test : /\.js$/,
+	    exclude: /(node_modules|bower_components)/,
+	    loader : "babel-loader"
 	} ]
     },
     plugins : [ new BowerWebpackPlugin({

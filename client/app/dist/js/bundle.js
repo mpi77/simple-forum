@@ -47,26 +47,26 @@
 	'use strict';
 
 	__webpack_require__(1);
+
 	__webpack_require__(3);
+
 	__webpack_require__(5);
+
 	__webpack_require__(7);
 
-	var home = __webpack_require__(9);
-	var session = __webpack_require__(10);
-	var thread = __webpack_require__(11);
-	var message = __webpack_require__(12);
+	__webpack_require__(9);
 
-	angular.module('simpleForum', [
-	  'ngRoute',
-	  'simpleForum.home',
-	  'simpleForum.session',
-	  'simpleForum.thread',
-	  'simpleForum.message'
-	]).
-	config(['$routeProvider', function($routeProvider) {
-	  $routeProvider.otherwise({redirectTo: '/home'});
+	__webpack_require__(10);
+
+	__webpack_require__(11);
+
+	__webpack_require__(12);
+
+	__webpack_require__(13);
+
+	angular.module('simpleForum', ['ngRoute', 'simpleForum.home', 'simpleForum.session', 'simpleForum.thread', 'simpleForum.message', 'simpleForum.auth']).config(['$routeProvider', function ($routeProvider) {
+	  $routeProvider.otherwise({ redirectTo: '/home' });
 	}]);
-
 
 /***/ },
 /* 1 */
@@ -41704,18 +41704,96 @@
 
 	'use strict';
 
-	angular.module('simpleForum.home', ['ngRoute'])
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	.config(['$routeProvider', function($routeProvider) {
-	  $routeProvider.when('/home', {
-	    templateUrl: 'components/home/home.html',
-	    controller: 'HomeCtrl'
-	  });
-	}])
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
-	.controller('HomeCtrl', [function() {
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	}]);
+	var GW_LOGIN_URL = "http://private-c7d92-pwx.apiary-mock.com/session/";
+	var GW_FETCH_USER_URL = "GEThttp://private-c7d92-pwx.apiary-mock.com/users/";
+
+	var Auth = (function () {
+	  function Auth($http) {
+	    _classCallCheck(this, Auth);
+
+	    this.$http = $http;
+	    this.token = localStorage.getItem('token') | null;
+	    this.userid = localStorage.getItem('userid');
+	    this.user = localStorage.getItem('user');
+	  }
+
+	  _createClass(Auth, [{
+	    key: "isAuth",
+	    value: function isAuth() {
+	      return !!this.token;
+	    }
+	  }, {
+	    key: "getUser",
+	    value: function getUser() {
+	      return this.user;
+	    }
+	  }, {
+	    key: "login",
+	    value: function login(username, password) {
+	      var _this = this;
+
+	      return this.$http.post(GW_LOGIN_URL, JSON.stringify({ username: username, password: password })).then(function (res) {
+	        _this.token = res.access_token;
+	        _this.userid = res.id;
+	        localStorage.setItem('token', _this.token);
+	        localStorage.setItem('userid', _this.userid);
+
+	        /** TODO */
+	        _this.user = null;
+	        localStorage.setItem('user', _this.user);
+	      });
+	    }
+	  }, {
+	    key: "logout",
+	    value: function logout() {
+	      localStorage.removeItem('token');
+	      localStorage.removeItem('userid');
+	      localStorage.removeItem('user');
+	      this.token = null;
+	      this.userid = null;
+	      this.user = null;
+	    }
+	  }]);
+
+	  return Auth;
+	})();
+
+	Auth.$inject = ['$http'];
+
+	var AuthInterceptor = (function () {
+	  function AuthInterceptor() {
+	    _classCallCheck(this, AuthInterceptor);
+	  }
+
+	  _createClass(AuthInterceptor, [{
+	    key: "request",
+	    value: function request(config) {
+	      var token = localStorage.getItem('token');
+	      if (token) {
+	        config.headers.Authorization = 'Bearer ' + token;
+	      }
+	      return config;
+	    }
+	  }]);
+
+	  return AuthInterceptor;
+	})();
+
+	config.$inject = ['$httpProvider'];
+
+	function config($httpProvider) {
+	  $httpProvider.interceptors.push('authInterceptor');
+	}
+
+	exports.default = angular.module('simpleForum.auth', []).service('auth', Auth).service('authInterceptor', AuthInterceptor).config(config).name;
 
 /***/ },
 /* 10 */
@@ -41723,25 +41801,15 @@
 
 	'use strict';
 
-	angular.module('simpleForum.session', ['ngRoute'])
-
-	.config(['$routeProvider', function($routeProvider) {
-	  $routeProvider.when('/login', {
-	    templateUrl: 'components/session/login.html',
-	    controller: 'LoginCtrl'
+	angular.module('simpleForum.home', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
+	  $routeProvider.when('/home', {
+	    templateUrl: 'components/home/home.html',
+	    controller: 'HomeCtrl'
 	  });
-	  $routeProvider.when('/logout', {
-	      templateUrl: 'components/session/logout.html',
-	      controller: 'LogoutCtrl'
-	    });
-	}])
-
-	.controller('LoginCtrl', [function() {
-
-	}])
-
-	.controller('LogoutCtrl', [function() {
-
+	}]).controller('HomeCtrl', ['$scope', 'auth', function (sc, auth) {
+	  sc.xxx = "demo";
+	  console.log(auth.login({ username: "x", password: "y" }));
+	  console.log(auth.isAuth());
 	}]);
 
 /***/ },
@@ -41750,18 +41818,16 @@
 
 	'use strict';
 
-	angular.module('simpleForum.thread', ['ngRoute'])
-
-	.config(['$routeProvider', function($routeProvider) {
-	  $routeProvider.when('/thread', {
-	    templateUrl: 'components/thread/create.html',
-	    controller: 'CreateThreadCtrl'
+	angular.module('simpleForum.session', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
+	  $routeProvider.when('/login', {
+	    templateUrl: 'components/session/login.html',
+	    controller: 'LoginCtrl'
 	  });
-	}])
-
-	.controller('CreateThreadCtrl', [function() {
-
-	}]);
+	  $routeProvider.when('/logout', {
+	    templateUrl: 'components/session/logout.html',
+	    controller: 'LogoutCtrl'
+	  });
+	}]).controller('LoginCtrl', [function () {}]).controller('LogoutCtrl', [function () {}]);
 
 /***/ },
 /* 12 */
@@ -41769,18 +41835,25 @@
 
 	'use strict';
 
-	angular.module('simpleForum.message', ['ngRoute'])
+	angular.module('simpleForum.thread', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
+	  $routeProvider.when('/thread', {
+	    templateUrl: 'components/thread/create.html',
+	    controller: 'CreateThreadCtrl'
+	  });
+	}]).controller('CreateThreadCtrl', [function () {}]);
 
-	.config(['$routeProvider', function($routeProvider) {
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	angular.module('simpleForum.message', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
 	  $routeProvider.when('/message', {
 	    templateUrl: 'components/message/create.html',
 	    controller: 'CreateMessageCtrl'
 	  });
-	}])
-
-	.controller('CreateMessageCtrl', [function() {
-
-	}]);
+	}]).controller('CreateMessageCtrl', [function () {}]);
 
 /***/ }
 /******/ ]);
