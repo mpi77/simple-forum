@@ -50,14 +50,21 @@
 	__webpack_require__(3);
 	__webpack_require__(5);
 	__webpack_require__(7);
-	__webpack_require__(9);
+
+	var home = __webpack_require__(9);
+	var session = __webpack_require__(10);
+	var thread = __webpack_require__(11);
+	var message = __webpack_require__(12);
 
 	angular.module('simpleForum', [
 	  'ngRoute',
-	  'simpleForum.index'
+	  'simpleForum.home',
+	  'simpleForum.session',
+	  'simpleForum.thread',
+	  'simpleForum.message'
 	]).
 	config(['$routeProvider', function($routeProvider) {
-	  $routeProvider.otherwise({redirectTo: '/index'});
+	  $routeProvider.otherwise({redirectTo: '/home'});
 	}]);
 
 
@@ -41697,16 +41704,81 @@
 
 	'use strict';
 
-	angular.module('simpleForum.index', ['ngRoute'])
+	angular.module('simpleForum.home', ['ngRoute'])
 
 	.config(['$routeProvider', function($routeProvider) {
-	  $routeProvider.when('/index', {
-	    templateUrl: 'index/index.html',
-	    controller: 'IndexCtrl'
+	  $routeProvider.when('/home', {
+	    templateUrl: 'components/home/home.html',
+	    controller: 'HomeCtrl'
 	  });
 	}])
 
-	.controller('IndexCtrl', [function() {
+	.controller('HomeCtrl', [function() {
+
+	}]);
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	angular.module('simpleForum.session', ['ngRoute'])
+
+	.config(['$routeProvider', function($routeProvider) {
+	  $routeProvider.when('/login', {
+	    templateUrl: 'components/session/login.html',
+	    controller: 'LoginCtrl'
+	  });
+	  $routeProvider.when('/logout', {
+	      templateUrl: 'components/session/logout.html',
+	      controller: 'LogoutCtrl'
+	    });
+	}])
+
+	.controller('LoginCtrl', [function() {
+
+	}])
+
+	.controller('LogoutCtrl', [function() {
+
+	}]);
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	angular.module('simpleForum.thread', ['ngRoute'])
+
+	.config(['$routeProvider', function($routeProvider) {
+	  $routeProvider.when('/thread', {
+	    templateUrl: 'components/thread/create.html',
+	    controller: 'CreateThreadCtrl'
+	  });
+	}])
+
+	.controller('CreateThreadCtrl', [function() {
+
+	}]);
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	angular.module('simpleForum.message', ['ngRoute'])
+
+	.config(['$routeProvider', function($routeProvider) {
+	  $routeProvider.when('/message', {
+	    templateUrl: 'components/message/create.html',
+	    controller: 'CreateMessageCtrl'
+	  });
+	}])
+
+	.controller('CreateMessageCtrl', [function() {
 
 	}]);
 

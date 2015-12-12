@@ -4,12 +4,19 @@ require("jquery");
 require("bootstrap");
 require("angular");
 require("angular-route");
-require("./index/index.js");
+
+var home = require("./components/home/home.js");
+var session = require("./components/session/session.js");
+var thread = require("./components/thread/thread.js");
+var message = require("./components/message/message.js");
 
 angular.module('simpleForum', [
   'ngRoute',
-  'simpleForum.index'
+  'simpleForum.home',
+  'simpleForum.session',
+  'simpleForum.thread',
+  'simpleForum.message'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/index'});
+  $routeProvider.otherwise({redirectTo: '/home'});
 }]);
