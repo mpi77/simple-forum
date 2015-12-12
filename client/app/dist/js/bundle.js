@@ -41720,8 +41720,7 @@
 	    _classCallCheck(this, Auth);
 
 	    this.$http = $http;
-	    this.token = localStorage.getItem('token') | null;
-	    this.userid = localStorage.getItem('userid');
+	    this.token = localStorage.getItem('token');
 	    this.user = localStorage.getItem('user');
 	  }
 
@@ -41741,24 +41740,21 @@
 	      var _this = this;
 
 	      return this.$http.post(GW_LOGIN_URL, JSON.stringify({ username: username, password: password })).then(function (res) {
-	        _this.token = res.access_token;
-	        _this.userid = res.id;
+	        _this.token = res.data.access_token;
+	        _this.user = res.data.user;
 	        localStorage.setItem('token', _this.token);
-	        localStorage.setItem('userid', _this.userid);
-
-	        /** TODO */
-	        _this.user = null;
 	        localStorage.setItem('user', _this.user);
+
+	        console.log("successfull authorization");
+	        console.log(_this.user);
 	      });
 	    }
 	  }, {
 	    key: "logout",
 	    value: function logout() {
 	      localStorage.removeItem('token');
-	      localStorage.removeItem('userid');
 	      localStorage.removeItem('user');
 	      this.token = null;
-	      this.userid = null;
 	      this.user = null;
 	    }
 	  }]);
@@ -41769,8 +41765,14 @@
 	Auth.$inject = ['$http'];
 
 	var AuthInterceptor = (function () {
-	  function AuthInterceptor() {
+
+	  /* ngInject */
+
+	  function AuthInterceptor($q, $location) {
 	    _classCallCheck(this, AuthInterceptor);
+
+	    this.$q = $q;
+	    this.$location = $location;
 	  }
 
 	  _createClass(AuthInterceptor, [{
@@ -41781,6 +41783,14 @@
 	        config.headers.Authorization = 'Bearer ' + token;
 	      }
 	      return config;
+	    }
+	  }, {
+	    key: "responseError",
+	    value: function responseError(rejection) {
+	      if (rejection.status === 401 || rejection.status === 403) {
+	        $location.path('/login');
+	      }
+	      $q.reject(rejection);
 	    }
 	  }]);
 
@@ -41808,8 +41818,8 @@
 	  });
 	}]).controller('HomeCtrl', ['$scope', 'auth', function (sc, auth) {
 	  sc.xxx = "demo";
-	  console.log(auth.login({ username: "x", password: "y" }));
-	  console.log(auth.isAuth());
+	  //console.log(auth.login({username:"x", password:"y"}));
+	  //console.log(auth.isAuth());
 	}]);
 
 /***/ },
@@ -41819,15 +41829,22 @@
 	'use strict';
 
 	angular.module('simpleForum.session', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
-	  $routeProvider.when('/login', {
-	    templateUrl: 'components/session/login.html',
-	    controller: 'LoginCtrl'
-	  });
-	  $routeProvider.when('/logout', {
-	    templateUrl: 'components/session/logout.html',
-	    controller: 'LogoutCtrl'
-	  });
-	}]).controller('LoginCtrl', [function () {}]).controller('LogoutCtrl', [function () {}]);
+	    $routeProvider.when('/login', {
+	        templateUrl: 'components/session/login.html',
+	        controller: 'LoginCtrl'
+	    });
+	    $routeProvider.when('/logout', {
+	        templateUrl: 'components/session/logout.html',
+	        controller: 'LogoutCtrl'
+	    });
+	}]).controller('LoginCtrl', ['$scope', '$location', 'auth', function ($scope, $location, auth) {
+	    $scope.login = function () {
+	        auth.login($scope.username, $scope.password);
+	        $location.path('/home');
+	    };
+	}]).controller('LogoutCtrl', ['$scope', 'auth', function (sc, auth) {
+	    auth.logout();
+	}]);
 
 /***/ },
 /* 12 */

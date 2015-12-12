@@ -85,7 +85,16 @@ $single = [
 		"session" => array(
 				"_meta" => metaResource("access/"),
 				"access_token" => "...stringACCESStoken...",
-				"id" => 777
+				"user" => array(
+                    "_meta" => metaResource("users/777/", array(
+                            "id" => 777, 
+                            "tsCreate"=>$commons["date"],
+                            "tsUpdate"=>$commons["date"])),
+                    "firstname" => "John",
+                    "lastname" => "Smith",
+                    "nick" => "js",
+                    "email" => "js@example.com"
+                )
 		)
         
         ];

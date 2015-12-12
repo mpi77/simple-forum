@@ -4,5 +4,17 @@
         "mediaType": "application\/json"
     },
     "access_token": "...stringACCESStoken...",
-    "id": 777
+    "user": {
+        "_meta": {
+            "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+            "mediaType": "application\/json",
+            "id": 777,
+            "tsCreate": "2015-01-01T00:00:00.000Z",
+            "tsUpdate": "2015-01-01T00:00:00.000Z"
+        },
+        "firstname": "John",
+        "lastname": "Smith",
+        "nick": "js",
+        "email": "js@example.com"
+    }
 }

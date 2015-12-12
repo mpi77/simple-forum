@@ -13,10 +13,14 @@ angular.module('simpleForum.session', ['ngRoute'])
     });
 }])
 
-.controller('LoginCtrl', [function() {
-
+.controller('LoginCtrl', ['$scope','$location','auth', function($scope,$location,auth) {
+    $scope.login = function(){
+	auth.login($scope.username, $scope.password);
+	$location.path('/home');
+    };
+    
 }])
 
-.controller('LogoutCtrl', [function() {
-
+.controller('LogoutCtrl', ['$scope','auth', function(sc,auth) {
+    auth.logout();
 }]);

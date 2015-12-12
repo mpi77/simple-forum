@@ -7,7 +7,6 @@ class Auth {
   constructor($http) {
     this.$http = $http;
     this.token = localStorage.getItem('token');
-    this.userid  = localStorage.getItem('userid');
     this.user  = localStorage.getItem('user');
   }
 
@@ -23,13 +22,9 @@ class Auth {
     return this.$http.post(GW_LOGIN_URL,
                       JSON.stringify({username, password})
     ).then((res) => {
-      this.token = res.access_token;
-      this.userid = res.id;
+      this.token = res.data.access_token;
+      this.user = res.data.user;
       localStorage.setItem('token', this.token);
-      localStorage.setItem('userid', this.userid);
-      
-      /** TODO */
-      this.user = null;
       localStorage.setItem('user', this.user);
       
       console.log("successfull authorization");
@@ -38,10 +33,8 @@ class Auth {
 
   logout() {
     localStorage.removeItem('token');
-    localStorage.removeItem('userid');
     localStorage.removeItem('user');
     this.token = null;
-    this.userid = null;
     this.user = null;
   }
 }
