@@ -82,7 +82,7 @@ $single = [
             "email" => "js@example.com"
         ),
 		
-		"access" => array(
+		"session" => array(
 				"_meta" => metaResource("access/"),
 				"access_token" => "...stringACCESStoken...",
 				"id" => 777

@@ -418,7 +418,7 @@ PWX RESTful API
             "msg": "Resource removed."
         }
 
-## Access item [/access/]
+## Session item [/session/]
 
 ### Do a signup item and get access_code [POST]
 + Request (application/json)
@@ -432,7 +432,7 @@ PWX RESTful API
 
         {
             "_meta": {
-                "href": "https:\/\/api.sf.sd2.cz\/v1\/access\/",
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/session\/",
                 "mediaType": "application\/json"
             },
             "access_token": "...stringACCESStoken...",
