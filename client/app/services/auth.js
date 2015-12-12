@@ -31,6 +31,8 @@ class Auth {
       /** TODO */
       this.user = null;
       localStorage.setItem('user', this.user);
+      
+      console.log("successfull authorization");
     });
   }
 
@@ -47,13 +49,27 @@ class Auth {
 Auth.$inject = ['$http'];
 
 class AuthInterceptor {
-  request(config) {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = 'Bearer ' + token;
+    
+    /* ngInject */
+    constructor($q, $location) {
+        this.$q = $q;
+        this.$location = $location;
     }
-    return config;
-  }
+    
+    request(config) {
+	const token = localStorage.getItem('token');
+	if (token) {
+	    config.headers.Authorization = 'Bearer ' + token;
+	}
+	return config;
+    }
+  
+    responseError(rejection){
+	if(rejection.status === 401 || rejection.status === 403) {
+	    $location.path('/login');
+	}
+	$q.reject(rejection);
+    }
 }
 
 config.$inject = ['$httpProvider'];
