@@ -1,1 +1,9 @@
-<p>thread create view</p>
+<div class="container">
+	<form class="form-thread" role="form" ng-submit="create()">
+		<h2 class="form-thread-heading">New thread</h2>
+		<label for="threadName" class="sr-only">Thread name</label> <input
+			type="text" id="threadName" class="form-control"
+			placeholder="Thread name" ng-model="threadName" required autofocus>
+		<button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
+	</form>
+</div>
