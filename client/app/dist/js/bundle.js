@@ -41857,16 +41857,56 @@
 
 	'use strict';
 
+	var GW_CREATE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
+	var GW_LIST_THREADS_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
+
 	angular.module('simpleForum.thread', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
-	   $routeProvider.when('/thread', {
-	      templateUrl: 'components/thread/create.html',
-	      controller: 'ThreadCreateCtrl'
-	   });
-	   $routeProvider.when('/threads', {
-	      templateUrl: 'components/thread/list.html',
-	      controller: 'ThreadListCtrl'
-	   });
-	}]).controller('ThreadCreateCtrl', [function () {}]).controller('ThreadListCtrl', [function () {}]);
+				$routeProvider.when('/thread', {
+							templateUrl: 'components/thread/create.html',
+							controller: 'ThreadCreateCtrl',
+							css: ['components/thread/thread.css']
+				});
+				$routeProvider.when('/threads', {
+							templateUrl: 'components/thread/list.html',
+							controller: 'ThreadListCtrl',
+							css: ['components/thread/thread.css']
+				});
+	}]).controller('ThreadCreateCtrl', ['$scope', '$location', '$http', 'auth', function ($scope, $location, $http, auth) {
+				$scope.create = function () {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							var threadName = $scope.threadName;
+
+							$http.post(GW_CREATE_THREAD_URL, JSON.stringify({ 'title': threadName })).then(function (res) {
+										// success
+										console.log('create thread ok');
+										$location.path('/threads');
+							}, function (res) {
+										// fail
+										console.log('create thread fail');
+							});
+				};
+	}]).controller('ThreadListCtrl', ['$scope', '$location', '$http', 'auth', function ($scope, $location, $http, auth) {
+				$scope.fetch = function () {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							$http.get(GW_LIST_THREADS_URL).then(function (res) {
+										// success
+										console.log('list threads ok');
+										$scope.threads = res.data.items;
+							}, function (res) {
+										// fail
+										console.log('list threads fail');
+										$scope.threads = null;
+							});
+				};
+
+				$scope.fetch();
+	}]);
 
 /***/ },
 /* 13 */
@@ -41894,15 +41934,18 @@
 
 	    $scope.isEnabled = function (elementLocation) {
 	        if (auth.isAuth()) {
+	            /* authorized section */
 	            switch (elementLocation) {
 	                case '/home':
 	                case '/threads':
+	                case '/thread':
 	                case '/logout':
 	                    return true;
 	                default:
 	                    return false;
 	            }
 	        } else {
+	            /* unauthorized section */
 	            switch (elementLocation) {
 	                case '/home':
 	                case '/login':

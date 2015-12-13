@@ -19,7 +19,10 @@
     "webpack": "~1.12.9",
     "bower-webpack-plugin": "~0.1.9",
     "babel-loader": "~6.2.0",
-    "babel-core": "~6.3.17"
+    "babel-core": "~6.3.17",
+    "css-loader": "~0.23.0",
+    "style-loader": "^0.12.4",
+    "es6-promise":"latest"
   },
   "scripts": {
     "postinstall": "bower install",
