@@ -3,10 +3,10 @@
 	<tr ng-repeat="x in threads">
     	<td>{{ x }}</td>
     	<td>
-    		<button type="button" class="btn btn-default btn-sm" aria-label="Delete">
+    		<button type="button" class="btn btn-default btn-sm" aria-label="Open" ng-click="messages(999)">
   				<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
 			</button>
-    		<button type="button" class="btn btn-default btn-sm" aria-label="Delete">
+    		<button type="button" class="btn btn-default btn-sm" aria-label="Delete" ng-click="remove(999)">
   				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 			</button>
     	</td>

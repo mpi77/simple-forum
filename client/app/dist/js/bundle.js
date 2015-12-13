@@ -41858,12 +41858,19 @@
 	'use strict';
 
 	var GW_CREATE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
+	var GW_THREAD_MESSAGES_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
+	var GW_DELETE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
 	var GW_LIST_THREADS_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
 
 	angular.module('simpleForum.thread', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
 				$routeProvider.when('/thread', {
 							templateUrl: 'components/thread/create.html',
 							controller: 'ThreadCreateCtrl',
+							css: ['components/thread/thread.css']
+				});
+				$routeProvider.when('/thread/:threadId', {
+							templateUrl: 'components/thread/view.html',
+							controller: 'ThreadViewCtrl',
 							css: ['components/thread/thread.css']
 				});
 				$routeProvider.when('/threads', {
@@ -41888,6 +41895,24 @@
 										console.log('create thread fail');
 							});
 				};
+	}]).controller('ThreadViewCtrl', ['$scope', '$location', '$http', '$routeParams', 'auth', function ($scope, $location, $http, $routeParams, auth) {
+				$scope.fetch = function () {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							$http.get(GW_THREAD_MESSAGES_URL + '?q=(thread=' + $routeParams.threadId + ')').then(function (res) {
+										// success
+										console.log('view thread ok');
+										$scope.content = res.data.items;
+							}, function (res) {
+										// fail
+										console.log('view thread fail');
+										$scope.threads = null;
+							});
+				};
+
+				$scope.fetch();
 	}]).controller('ThreadListCtrl', ['$scope', '$location', '$http', 'auth', function ($scope, $location, $http, auth) {
 				$scope.fetch = function () {
 							if (!auth.isAuth()) {
@@ -41903,6 +41928,30 @@
 										console.log('list threads fail');
 										$scope.threads = null;
 							});
+				};
+
+				$scope.remove = function (threadId) {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							$http.delete(GW_DELETE_THREAD_URL + threadId + '/').then(function (res) {
+										// success
+										console.log('delete thread ok');
+										$location.path('/threads');
+										$scope.fetch();
+							}, function (res) {
+										// fail
+										console.log('delete thread fail');
+							});
+				};
+
+				$scope.messages = function (threadId) {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							$location.path('/thread/' + threadId + '/');
 				};
 
 				$scope.fetch();
