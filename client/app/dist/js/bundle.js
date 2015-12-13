@@ -64,7 +64,9 @@
 
 	__webpack_require__(13);
 
-	angular.module('simpleForum', ['ngRoute', 'simpleForum.home', 'simpleForum.session', 'simpleForum.thread', 'simpleForum.message', 'simpleForum.auth']).config(['$routeProvider', function ($routeProvider) {
+	__webpack_require__(14);
+
+	angular.module('simpleForum', ['ngRoute', 'simpleForum.home', 'simpleForum.session', 'simpleForum.thread', 'simpleForum.message', 'simpleForum.auth', 'simpleForum.navbar']).config(['$routeProvider', function ($routeProvider) {
 	  $routeProvider.otherwise({ redirectTo: '/home' });
 	}]);
 
@@ -41736,7 +41738,7 @@
 	    }
 	  }, {
 	    key: "login",
-	    value: function login(username, password) {
+	    value: function login(username, password, successCallback) {
 	      var _this = this;
 
 	      return this.$http.post(GW_LOGIN_URL, JSON.stringify({ username: username, password: password })).then(function (res) {
@@ -41745,17 +41747,17 @@
 	        localStorage.setItem('token', _this.token);
 	        localStorage.setItem('user', _this.user);
 
-	        console.log("successfull authorization");
-	        console.log(_this.user);
+	        successCallback();
 	      });
 	    }
 	  }, {
 	    key: "logout",
-	    value: function logout() {
+	    value: function logout(successCallback) {
 	      localStorage.removeItem('token');
 	      localStorage.removeItem('user');
 	      this.token = null;
 	      this.user = null;
+	      successCallback();
 	    }
 	  }]);
 
@@ -41816,10 +41818,8 @@
 	    templateUrl: 'components/home/home.html',
 	    controller: 'HomeCtrl'
 	  });
-	}]).controller('HomeCtrl', ['$scope', 'auth', function (sc, auth) {
-	  sc.xxx = "demo";
-	  //console.log(auth.login({username:"x", password:"y"}));
-	  //console.log(auth.isAuth());
+	}]).controller('HomeCtrl', ['$scope', 'auth', function ($scope, auth) {
+	  $scope.lin = auth.isAuth();
 	}]);
 
 /***/ },
@@ -41831,19 +41831,24 @@
 	angular.module('simpleForum.session', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
 	    $routeProvider.when('/login', {
 	        templateUrl: 'components/session/login.html',
-	        controller: 'LoginCtrl'
+	        controller: 'LoginCtrl',
+	        css: ['components/session/session.css']
 	    });
 	    $routeProvider.when('/logout', {
 	        templateUrl: 'components/session/logout.html',
-	        controller: 'LogoutCtrl'
+	        controller: 'LogoutCtrl',
+	        css: ['components/session/session.css']
 	    });
 	}]).controller('LoginCtrl', ['$scope', '$location', 'auth', function ($scope, $location, auth) {
 	    $scope.login = function () {
-	        auth.login($scope.username, $scope.password);
-	        $location.path('/home');
+	        auth.login($scope.username, $scope.password, function () {
+	            $location.path('/home');
+	        });
 	    };
-	}]).controller('LogoutCtrl', ['$scope', 'auth', function (sc, auth) {
-	    auth.logout();
+	}]).controller('LogoutCtrl', ['$scope', '$location', 'auth', function ($scope, $location, auth) {
+	    auth.logout(function () {
+	        //$location.path('/home');
+	    });
 	}]);
 
 /***/ },
@@ -41853,11 +41858,15 @@
 	'use strict';
 
 	angular.module('simpleForum.thread', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
-	  $routeProvider.when('/thread', {
-	    templateUrl: 'components/thread/create.html',
-	    controller: 'CreateThreadCtrl'
-	  });
-	}]).controller('CreateThreadCtrl', [function () {}]);
+	   $routeProvider.when('/thread', {
+	      templateUrl: 'components/thread/create.html',
+	      controller: 'ThreadCreateCtrl'
+	   });
+	   $routeProvider.when('/threads', {
+	      templateUrl: 'components/thread/list.html',
+	      controller: 'ThreadListCtrl'
+	   });
+	}]).controller('ThreadCreateCtrl', [function () {}]).controller('ThreadListCtrl', [function () {}]);
 
 /***/ },
 /* 13 */
@@ -41871,6 +41880,39 @@
 	    controller: 'CreateMessageCtrl'
 	  });
 	}]).controller('CreateMessageCtrl', [function () {}]);
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	angular.module('simpleForum.navbar', []).controller('NavbarCtrl', ['$scope', '$location', 'auth', function ($scope, $location, auth) {
+	    $scope.isActive = function (viewLocation) {
+	        return viewLocation === $location.path();
+	    };
+
+	    $scope.isEnabled = function (elementLocation) {
+	        if (auth.isAuth()) {
+	            switch (elementLocation) {
+	                case '/home':
+	                case '/threads':
+	                case '/logout':
+	                    return true;
+	                default:
+	                    return false;
+	            }
+	        } else {
+	            switch (elementLocation) {
+	                case '/home':
+	                case '/login':
+	                    return true;
+	                default:
+	                    return false;
+	            }
+	        }
+	    };
+	}]);
 
 /***/ }
 /******/ ]);

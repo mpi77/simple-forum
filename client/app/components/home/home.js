@@ -9,8 +9,6 @@ angular.module('simpleForum.home', ['ngRoute'])
   });
 }])
 
-.controller('HomeCtrl', ['$scope','auth', function(sc,auth) {
-    sc.xxx = "demo";
-    //console.log(auth.login({username:"x", password:"y"}));
-    //console.log(auth.isAuth());
+.controller('HomeCtrl', ['$scope','auth', function($scope,auth) {
+    $scope.lin = auth.isAuth();
 }]);

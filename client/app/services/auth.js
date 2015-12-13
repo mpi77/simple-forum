@@ -18,7 +18,7 @@ class Auth {
     return this.user;
   }
 
-  login(username, password) {
+  login(username, password, successCallback) {
     return this.$http.post(GW_LOGIN_URL,
                       JSON.stringify({username, password})
     ).then((res) => {
@@ -27,15 +27,16 @@ class Auth {
       localStorage.setItem('token', this.token);
       localStorage.setItem('user', this.user);
       
-      console.log("successfull authorization");
+      successCallback();
     });
   }
 
-  logout() {
+  logout(successCallback) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.token = null;
     this.user = null;
+    successCallback();
   }
 }
 

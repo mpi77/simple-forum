@@ -5,22 +5,27 @@ angular.module('simpleForum.session', ['ngRoute'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/login', {
     templateUrl: 'components/session/login.html',
-    controller: 'LoginCtrl'
+    controller: 'LoginCtrl',
+    css: ['components/session/session.css']
   });
   $routeProvider.when('/logout', {
       templateUrl: 'components/session/logout.html',
-      controller: 'LogoutCtrl'
+      controller: 'LogoutCtrl',
+      css: ['components/session/session.css']
     });
 }])
 
 .controller('LoginCtrl', ['$scope','$location','auth', function($scope,$location,auth) {
     $scope.login = function(){
-	auth.login($scope.username, $scope.password);
-	$location.path('/home');
+	auth.login($scope.username, $scope.password, ()=>{
+	    $location.path('/home');
+	});
     };
     
 }])
 
-.controller('LogoutCtrl', ['$scope','auth', function(sc,auth) {
-    auth.logout();
+.controller('LogoutCtrl', ['$scope','$location','auth', function($scope,$location,auth) {
+    auth.logout(()=>{
+	//$location.path('/home');
+    });
 }]);
