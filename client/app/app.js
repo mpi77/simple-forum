@@ -4,6 +4,7 @@ import 'jquery';
 import 'bootstrap';
 import 'angular';
 import 'angular-route';
+import 'angular-flash-alert';
 
 import './services/auth.js';
 import './components/home/home.js';
@@ -14,6 +15,7 @@ import './components/navbar/navbar.js';
 
 angular.module('simpleForum', [
   'ngRoute',
+  'flash',
   'simpleForum.home',
   'simpleForum.session',
   'simpleForum.thread',

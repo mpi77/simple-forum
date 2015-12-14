@@ -56,17 +56,19 @@
 
 	__webpack_require__(9);
 
-	__webpack_require__(10);
+	__webpack_require__(15);
 
-	__webpack_require__(11);
+	__webpack_require__(16);
 
-	__webpack_require__(12);
+	__webpack_require__(17);
 
-	__webpack_require__(13);
+	__webpack_require__(18);
 
-	__webpack_require__(14);
+	__webpack_require__(19);
 
-	angular.module('simpleForum', ['ngRoute', 'simpleForum.home', 'simpleForum.session', 'simpleForum.thread', 'simpleForum.message', 'simpleForum.auth', 'simpleForum.navbar']).config(['$routeProvider', function ($routeProvider) {
+	__webpack_require__(20);
+
+	angular.module('simpleForum', ['ngRoute', 'flash', 'simpleForum.home', 'simpleForum.session', 'simpleForum.thread', 'simpleForum.message', 'simpleForum.auth', 'simpleForum.navbar']).config(['$routeProvider', function ($routeProvider) {
 	  $routeProvider.otherwise({ redirectTo: '/home' });
 	}]);
 
@@ -41702,6 +41704,429 @@
 
 /***/ },
 /* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(10);
+	__webpack_require__(11);
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	/*! angular-flash - v1.0.0 - 2015-03-19
+	* https://github.com/sachinchoolur/angular-flash
+	* Copyright (c) 2015 Sachin; Licensed MIT */
+	(function() {
+	    'use strict';
+	    var app = angular.module('flash', []);
+
+	    app.run(['$rootScope', function($rootScope) {
+	        // initialize variables
+	        $rootScope.flash = {};
+	        $rootScope.flash.text = '';
+	        $rootScope.flash.type = '';
+	        $rootScope.flash.timeout = 5000;
+	        $rootScope.hasFlash = false;
+	    }]);
+
+	    // Directive for compiling dynamic html
+	    app.directive('dynamic', ['$compile', function($compile) {
+	        return {
+	            restrict: 'A',
+	            replace: true,
+	            link: function(scope, ele, attrs) {
+	                scope.$watch(attrs.dynamic, function(html) {
+	                    ele.html(html);
+	                    $compile(ele.contents())(scope);
+	                });
+	            }
+	        };
+	    }]);
+
+	    // Directive for closing the flash message
+	    app.directive('closeFlash', ['$compile', 'Flash', function($compile, Flash) {
+	        return {
+	            link: function(scope, ele) {
+	                ele.on('click', function() {
+	                    Flash.dismiss();
+	                });
+	            }
+	        };
+	    }]);
+
+	    // Create flashMessage directive
+	    app.directive('flashMessage', ['$compile', '$rootScope', function($compile, $rootScope) {
+	        return {
+	            restrict: 'A',
+	            template: '<div role="alert" ng-show="hasFlash" class="alert {{flash.addClass}} alert-{{flash.type}} alert-dismissible ng-hide alertIn alertOut "> <span dynamic="flash.text"></span> <button type="button" class="close" close-flash><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button> </div>',
+	            link: function(scope, ele, attrs) {
+	                // get timeout value from directive attribute and set to flash timeout
+	                $rootScope.flash.timeout = parseInt(attrs.flashMessage, 10);
+	            }
+	        };
+	    }]);
+
+	    app.factory('Flash', ['$rootScope', '$timeout',
+	        function($rootScope, $timeout) {
+
+	            var dataFactory = {},
+	                timeOut;
+
+	            // Create flash message
+	            dataFactory.create = function(type, text, addClass) {
+	                var $this = this;
+	                $timeout.cancel(timeOut);
+	                $rootScope.flash.type = type;
+	                $rootScope.flash.text = text;
+	                $rootScope.flash.addClass = addClass;
+	                $timeout(function() {
+	                    $rootScope.hasFlash = true;
+	                }, 100);
+	                timeOut = $timeout(function() {
+	                    $this.dismiss();
+	                }, $rootScope.flash.timeout);
+	            };
+
+	            // Cancel flashmessage timeout function
+	            dataFactory.pause = function() {
+	                $timeout.cancel(timeOut);
+	            };
+
+	            // Dismiss flash message
+	            dataFactory.dismiss = function() {
+	                $timeout.cancel(timeOut);
+	                $timeout(function() {
+	                    $rootScope.hasFlash = false;
+	                });
+	            };
+	            return dataFactory;
+	        }
+	    ]);
+	}());
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(12);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(14)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./angular-flash.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./angular-flash.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(13)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "/*! angular-flash - v1.0.0 - 2015-03-19\r\n* https://github.com/sachinchoolur/angular-flash\r\n* Copyright (c) 2015 Sachin; Licensed MIT */\r\n.alert {\n  padding: 15px;\n  margin-bottom: 20px;\n  border: 1px solid transparent;\n  border-radius: 4px;\n}\n.alert h4 {\n  margin-top: 0;\n  color: inherit;\n}\n.alert .alert-link {\n  font-weight: bold;\n}\n.alert > p,\n.alert > ul {\n  margin-bottom: 0;\n}\n.alert > p + p {\n  margin-top: 5px;\n}\n.alert-dismissable,\n.alert-dismissible {\n  padding-right: 35px;\n}\n.alert-dismissable .close,\n.alert-dismissible .close {\n  position: relative;\n  top: -2px;\n  right: -21px;\n  color: inherit;\n}\n.alert-success {\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #d6e9c6;\n}\n.alert-success hr {\n  border-top-color: #c9e2b3;\n}\n.alert-success .alert-link {\n  color: #2b542c;\n}\n.alert-info {\n  color: #31708f;\n  background-color: #d9edf7;\n  border-color: #bce8f1;\n}\n.alert-info hr {\n  border-top-color: #a6e1ec;\n}\n.alert-info .alert-link {\n  color: #245269;\n}\n.alert-warning {\n  color: #8a6d3b;\n  background-color: #fcf8e3;\n  border-color: #faebcc;\n}\n.alert-warning hr {\n  border-top-color: #f7e1b5;\n}\n.alert-warning .alert-link {\n  color: #66512c;\n}\n.alert-danger {\n  color: #a94442;\n  background-color: #f2dede;\n  border-color: #ebccd1;\n}\n.alert-danger hr {\n  border-top-color: #e4b9c0;\n}\n.alert-danger .alert-link {\n  color: #843534;\n}\n\n.close {\n  float: right;\n  font-size: 21px;\n  font-weight: bold;\n  line-height: 1;\n  color: #000;\n  text-shadow: 0 1px 0 #fff;\n  filter: alpha(opacity=20);\n  opacity: .2;\n}\n.close:hover,\n.close:focus {\n  color: #000;\n  text-decoration: none;\n  cursor: pointer;\n  filter: alpha(opacity=50);\n  opacity: .5;\n}\nbutton.close {\n  -webkit-appearance: none;\n  padding: 0;\n  cursor: pointer;\n  background: transparent;\n  border: 0;\n}\n.sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  border: 0;\n}\n\n\n\n.alertIn, .alertOut {\n    -webkit-transition: -webkit-transform 0.22s cubic-bezier(0.25, 0, 0.25, 1), opacity 0.22s cubic-bezier(0.25, 0, 0.25, 1);\n    -moz-transition: -moz-transform 0.22s cubic-bezier(0.25, 0, 0.25, 1), opacity 0.22s cubic-bezier(0.25, 0, 0.25, 1);\n    -o-transition: -o-transform 0.22s cubic-bezier(0.25, 0, 0.25, 1), opacity 0.22s cubic-bezier(0.25, 0, 0.25, 1);\n    transition: transform 0.22s cubic-bezier(0.25, 0, 0.25, 1), opacity 0.22s cubic-bezier(0.25, 0, 0.25, 1);\n}\n.alertIn.ng-hide-remove, .alertOut.ng-hide-add.ng-hide-add-active {\n    opacity: 0;\n    -webkit-transform: translate3d(100px, 0px, 0px);\n    transform: translate3d(100px, 0px, 0px);\n    display: block !important;\n}\n.alertOut.ng-hide-add, .alertIn.ng-hide-remove.ng-hide-remove-active {\n    opacity: 1;\n    display: block !important;\n    -webkit-transform: translate3d(0px, 0px, 0px);\n    transform: translate3d(0px, 0px, 0px);\n}", ""]);
+
+	// exports
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	// css base code, injected by the css-loader
+	module.exports = function() {
+		var list = [];
+
+		// return the list of modules as css string
+		list.toString = function toString() {
+			var result = [];
+			for(var i = 0; i < this.length; i++) {
+				var item = this[i];
+				if(item[2]) {
+					result.push("@media " + item[2] + "{" + item[1] + "}");
+				} else {
+					result.push(item[1]);
+				}
+			}
+			return result.join("");
+		};
+
+		// import a list of modules into the list
+		list.i = function(modules, mediaQuery) {
+			if(typeof modules === "string")
+				modules = [[null, modules, ""]];
+			var alreadyImportedModules = {};
+			for(var i = 0; i < this.length; i++) {
+				var id = this[i][0];
+				if(typeof id === "number")
+					alreadyImportedModules[id] = true;
+			}
+			for(i = 0; i < modules.length; i++) {
+				var item = modules[i];
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+					if(mediaQuery && !item[2]) {
+						item[2] = mediaQuery;
+					} else if(mediaQuery) {
+						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+					}
+					list.push(item);
+				}
+			}
+		};
+		return list;
+	};
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isOldIE = memoize(function() {
+			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0;
+
+	module.exports = function(list, options) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+
+		options = options || {};
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+
+	function createStyleElement() {
+		var styleElement = document.createElement("style");
+		var head = getHeadElement();
+		styleElement.type = "text/css";
+		head.appendChild(styleElement);
+		return styleElement;
+	}
+
+	function createLinkElement() {
+		var linkElement = document.createElement("link");
+		var head = getHeadElement();
+		linkElement.rel = "stylesheet";
+		head.appendChild(linkElement);
+		return linkElement;
+	}
+
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement());
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else if(obj.sourceMap &&
+			typeof URL === "function" &&
+			typeof URL.createObjectURL === "function" &&
+			typeof URL.revokeObjectURL === "function" &&
+			typeof Blob === "function" &&
+			typeof btoa === "function") {
+			styleElement = createLinkElement();
+			update = updateLink.bind(null, styleElement);
+			remove = function() {
+				styleElement.parentNode.removeChild(styleElement);
+				if(styleElement.href)
+					URL.revokeObjectURL(styleElement.href);
+			};
+		} else {
+			styleElement = createStyleElement();
+			update = applyToTag.bind(null, styleElement);
+			remove = function() {
+				styleElement.parentNode.removeChild(styleElement);
+			};
+		}
+
+		update(obj);
+
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+
+	var replaceText = (function () {
+		var textStore = [];
+
+		return function (index, replacement) {
+			textStore[index] = replacement;
+			return textStore.filter(Boolean).join('\n');
+		};
+	})();
+
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+		var sourceMap = obj.sourceMap;
+
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+
+	function updateLink(linkElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+		var sourceMap = obj.sourceMap;
+
+		if(sourceMap) {
+			// http://stackoverflow.com/a/26603875
+			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+		}
+
+		var blob = new Blob([css], { type: "text/css" });
+
+		var oldSrc = linkElement.href;
+
+		linkElement.href = URL.createObjectURL(blob);
+
+		if(oldSrc)
+			URL.revokeObjectURL(oldSrc);
+	}
+
+
+/***/ },
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41808,7 +42233,7 @@
 	exports.default = angular.module('simpleForum.auth', []).service('auth', Auth).service('authInterceptor', AuthInterceptor).config(config).name;
 
 /***/ },
-/* 10 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41823,7 +42248,7 @@
 	}]);
 
 /***/ },
-/* 11 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41839,20 +42264,21 @@
 	        controller: 'LogoutCtrl',
 	        css: ['components/session/session.css']
 	    });
-	}]).controller('LoginCtrl', ['$scope', '$location', 'auth', function ($scope, $location, auth) {
+	}]).controller('LoginCtrl', ['$scope', '$location', 'Flash', 'auth', function ($scope, $location, Flash, auth) {
 	    $scope.login = function () {
 	        auth.login($scope.username, $scope.password, function () {
+	            Flash.create('success', '<strong>Well done!</strong> You are logged in.');
 	            $location.path('/home');
 	        });
 	    };
-	}]).controller('LogoutCtrl', ['$scope', '$location', 'auth', function ($scope, $location, auth) {
+	}]).controller('LogoutCtrl', ['$scope', '$location', 'Flash', 'auth', function ($scope, $location, Flash, auth) {
 	    auth.logout(function () {
-	        //$location.path('/home');
+	        Flash.create('info', 'You are logged out.');
 	    });
 	}]);
 
 /***/ },
-/* 12 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41860,6 +42286,7 @@
 	var GW_CREATE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
 	var GW_THREAD_MESSAGES_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
 	var GW_DELETE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
+	var GW_DELETE_MESSAGE_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
 	var GW_LIST_THREADS_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
 
 	angular.module('simpleForum.thread', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
@@ -41878,7 +42305,7 @@
 							controller: 'ThreadListCtrl',
 							css: ['components/thread/thread.css']
 				});
-	}]).controller('ThreadCreateCtrl', ['$scope', '$location', '$http', 'auth', function ($scope, $location, $http, auth) {
+	}]).controller('ThreadCreateCtrl', ['$scope', '$location', '$http', 'Flash', 'auth', function ($scope, $location, $http, Flash, auth) {
 				$scope.create = function () {
 							if (!auth.isAuth()) {
 										$location.path('/login');
@@ -41888,11 +42315,12 @@
 
 							$http.post(GW_CREATE_THREAD_URL, JSON.stringify({ 'title': threadName })).then(function (res) {
 										// success
-										console.log('create thread ok');
+										Flash.create('success', '<strong>Well done!</strong> You successfully created new thread.');
 										$location.path('/threads');
 							}, function (res) {
 										// fail
-										console.log('create thread fail');
+										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+										console.log('[FAIL] create/thread create');
 							});
 				};
 
@@ -41903,7 +42331,7 @@
 
 							$location.path('/threads');
 				};
-	}]).controller('ThreadViewCtrl', ['$scope', '$location', '$http', '$routeParams', 'auth', function ($scope, $location, $http, $routeParams, auth) {
+	}]).controller('ThreadViewCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash', 'auth', function ($scope, $location, $http, $routeParams, Flash, auth) {
 				$scope.fetch = function () {
 							if (!auth.isAuth()) {
 										$location.path('/login');
@@ -41911,12 +42339,12 @@
 
 							$http.get(GW_THREAD_MESSAGES_URL + '?q=(thread=' + $routeParams.threadId + ')').then(function (res) {
 										// success
-										console.log('view thread ok');
 										$scope.content = res.data.items;
 							}, function (res) {
 										// fail
-										console.log('view thread fail');
 										$scope.threads = null;
+										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+										console.log('[FAIL] view/thread view');
 							});
 				};
 
@@ -41928,12 +42356,21 @@
 							$location.url('/message').search({ thread: threadId });
 				};
 
-				$scope.removeMessage = function (messageId) {
+				$scope.removeMessage = function (messageId, threadId) {
 							if (!auth.isAuth()) {
 										$location.path('/login');
 							}
 
-							console.log('remove message ok');
+							$http.delete(GW_DELETE_MESSAGE_URL + messageId + '/').then(function (res) {
+										// success
+										Flash.create('success', '<strong>Well done!</strong> You successfully removed message.');
+										$location.path('/thread/' + threadId);
+										$scope.fetch();
+							}, function (res) {
+										// fail
+										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+										console.log('[FAIL] view/message remove');
+							});
 				};
 
 				$scope.removeThread = function (threadId) {
@@ -41941,7 +42378,16 @@
 										$location.path('/login');
 							}
 
-							console.log('remove thread ok');
+							$http.delete(GW_DELETE_THREAD_URL + threadId + '/').then(function (res) {
+										// success
+										Flash.create('success', '<strong>Well done!</strong> You successfully removed thread.');
+										$location.path('/threads');
+										$scope.fetch();
+							}, function (res) {
+										// fail
+										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+										console.log('[FAIL] view/thread remove');
+							});
 				};
 
 				$scope.back = function () {
@@ -41953,7 +42399,7 @@
 				};
 
 				$scope.fetch();
-	}]).controller('ThreadListCtrl', ['$scope', '$location', '$http', 'auth', function ($scope, $location, $http, auth) {
+	}]).controller('ThreadListCtrl', ['$scope', '$location', '$http', 'Flash', 'auth', function ($scope, $location, $http, Flash, auth) {
 				$scope.fetch = function () {
 							if (!auth.isAuth()) {
 										$location.path('/login');
@@ -41961,12 +42407,12 @@
 
 							$http.get(GW_LIST_THREADS_URL).then(function (res) {
 										// success
-										console.log('list threads ok');
 										$scope.threads = res.data.items;
 							}, function (res) {
 										// fail
-										console.log('list threads fail');
 										$scope.threads = null;
+										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+										console.log('[FAIL] threads/list of threads');
 							});
 				};
 
@@ -41977,12 +42423,13 @@
 
 							$http.delete(GW_DELETE_THREAD_URL + threadId + '/').then(function (res) {
 										// success
-										console.log('delete thread ok');
+										Flash.create('success', '<strong>Well done!</strong> You successfully removed thread.');
 										$location.path('/threads');
 										$scope.fetch();
 							}, function (res) {
 										// fail
-										console.log('delete thread fail');
+										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+										console.log('[FAIL] threads/thread remove');
 							});
 				};
 
@@ -41991,7 +42438,7 @@
 										$location.path('/login');
 							}
 
-							$location.path('/thread/' + threadId + '/');
+							$location.path('/thread/' + threadId);
 				};
 
 				$scope.createThread = function () {
@@ -42006,7 +42453,7 @@
 	}]);
 
 /***/ },
-/* 13 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -42019,7 +42466,7 @@
 					controller: 'MessageCreateCtrl',
 					css: ['components/message/message.css']
 			});
-	}]).controller('MessageCreateCtrl', ['$scope', '$location', '$http', '$routeParams', 'auth', function ($scope, $location, $http, $routeParams, auth) {
+	}]).controller('MessageCreateCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash', 'auth', function ($scope, $location, $http, $routeParams, Flash, auth) {
 			$scope.create = function () {
 					if (!auth.isAuth()) {
 							$location.path('/login');
@@ -42030,13 +42477,14 @@
 
 					$http.post(GW_CREATE_MESSAGE_URL, JSON.stringify({ 'author': authorId, 'thread': threadId, 'content': $scope.messageContent })).then(function (res) {
 							// success
-							console.log('create message ok');
+							Flash.create('success', '<strong>Well done!</strong> You successfully created new message.');
 							$location.replace();
 							$location.search('thread', null);
 							$location.path('/thread/' + threadId);
 					}, function (res) {
 							// fail
-							console.log('create message fail');
+							Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+							console.log('[FAIL] message create');
 					});
 			};
 
@@ -42053,7 +42501,7 @@
 	}]);
 
 /***/ },
-/* 14 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';

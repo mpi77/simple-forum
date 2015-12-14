@@ -12,7 +12,7 @@ angular.module('simpleForum.message', ['ngRoute'])
   });
 }])
 
-.controller('MessageCreateCtrl', ['$scope','$location','$http','$routeParams','auth', function($scope,$location,$http,$routeParams,auth) {
+.controller('MessageCreateCtrl', ['$scope','$location','$http','$routeParams','Flash','auth', function($scope,$location,$http,$routeParams,Flash,auth) {
     $scope.create = function(){
 	if(!auth.isAuth()){
 	    $location.path('/login');
@@ -25,13 +25,14 @@ angular.module('simpleForum.message', ['ngRoute'])
 		JSON.stringify({'author':authorId, 'thread':threadId, 'content':$scope.messageContent})
 	).then((res) => {
 	    // success
-	    console.log('create message ok');
+	    Flash.create('success', '<strong>Well done!</strong> You successfully created new message.');
 	    $location.replace();
 	    $location.search('thread', null);
 	    $location.path('/thread/' + threadId);
 	}, (res) => {
 	    // fail
-	    console.log('create message fail');
+	    Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+	    console.log('[FAIL] message create');
 	});
     };
     

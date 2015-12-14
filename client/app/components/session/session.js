@@ -15,17 +15,18 @@ angular.module('simpleForum.session', ['ngRoute'])
     });
 }])
 
-.controller('LoginCtrl', ['$scope','$location','auth', function($scope,$location,auth) {
+.controller('LoginCtrl', ['$scope','$location','Flash','auth', function($scope,$location,Flash,auth) {
     $scope.login = function(){
 	auth.login($scope.username, $scope.password, ()=>{
+	    Flash.create('success', '<strong>Well done!</strong> You are logged in.');
 	    $location.path('/home');
 	});
     };
     
 }])
 
-.controller('LogoutCtrl', ['$scope','$location','auth', function($scope,$location,auth) {
+.controller('LogoutCtrl', ['$scope','$location','Flash','auth', function($scope,$location,Flash,auth) {
     auth.logout(()=>{
-	//$location.path('/home');
+	Flash.create('info', 'You are logged out.');
     });
 }]);

@@ -1,3 +1,5 @@
+require('es6-promise').polyfill()
+
 var webpack = require("webpack");
 var BowerWebpackPlugin = require("bower-webpack-plugin");
 

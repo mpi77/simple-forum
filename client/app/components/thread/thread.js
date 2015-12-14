@@ -3,6 +3,7 @@
 const GW_CREATE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
 const GW_THREAD_MESSAGES_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
 const GW_DELETE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
+const GW_DELETE_MESSAGE_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
 const GW_LIST_THREADS_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
 
 angular.module('simpleForum.thread', [ 'ngRoute' ])
@@ -25,7 +26,7 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
     });
 } ])
 
-.controller('ThreadCreateCtrl', ['$scope','$location','$http','auth', function($scope,$location,$http,auth) {
+.controller('ThreadCreateCtrl', ['$scope','$location','$http','Flash','auth', function($scope,$location,$http,Flash,auth) {
     $scope.create = function(){
 	if(!auth.isAuth()){
 	    $location.path('/login');
@@ -37,11 +38,12 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 		JSON.stringify({'title':threadName})
 	).then((res) => {
 	    // success
-	    console.log('create thread ok');
+	    Flash.create('success', '<strong>Well done!</strong> You successfully created new thread.');
 	    $location.path('/threads');
 	}, (res) => {
 	    // fail
-	    console.log('create thread fail');
+	    Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+	    console.log('[FAIL] create/thread create');
 	});
     };
     
@@ -54,7 +56,7 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
     };
 }])
 
-.controller('ThreadViewCtrl', ['$scope','$location','$http','$routeParams','auth', function($scope,$location,$http,$routeParams,auth) {
+.controller('ThreadViewCtrl', ['$scope','$location','$http','$routeParams','Flash','auth', function($scope,$location,$http,$routeParams,Flash,auth) {
     $scope.fetch = function(){
 	if(!auth.isAuth()){
 	    $location.path('/login');
@@ -63,12 +65,12 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	$http.get(GW_THREAD_MESSAGES_URL + '?q=(thread=' + $routeParams.threadId + ')')
 	.then((res) => {
 	    // success
-	    console.log('view thread ok');
 	    $scope.content = res.data.items;
 	}, (res) => {
 	    // fail
-	    console.log('view thread fail');
 	    $scope.threads = null;
+	    Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+	    console.log('[FAIL] view/thread view');
 	});
     };
     
@@ -80,12 +82,22 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	$location.url('/message').search({thread:threadId});
     };
     
-    $scope.removeMessage = function(messageId){
+    $scope.removeMessage = function(messageId, threadId){
 	if(!auth.isAuth()){
 	    $location.path('/login');
 	}
 	
-	console.log('remove message ok');
+	$http.delete(GW_DELETE_MESSAGE_URL + messageId + '/')
+	.then((res) => {
+	    // success
+	    Flash.create('success', '<strong>Well done!</strong> You successfully removed message.');
+	    $location.path('/thread/' + threadId);
+	    $scope.fetch();
+	}, (res) => {
+	    // fail
+	    Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+	    console.log('[FAIL] view/message remove');
+	});
     };
     
     $scope.removeThread = function(threadId){
@@ -93,7 +105,17 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	    $location.path('/login');
 	}
 	
-	console.log('remove thread ok');
+	$http.delete(GW_DELETE_THREAD_URL + threadId + '/')
+	.then((res) => {
+	    // success
+	    Flash.create('success', '<strong>Well done!</strong> You successfully removed thread.');
+	    $location.path('/threads');
+	    $scope.fetch();
+	}, (res) => {
+	    // fail
+	    Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+	    console.log('[FAIL] view/thread remove');
+	});
     };
     
     $scope.back = function(){
@@ -107,7 +129,7 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
     $scope.fetch();
 }])
 
-.controller('ThreadListCtrl', ['$scope','$location','$http','auth', function($scope,$location,$http,auth) {
+.controller('ThreadListCtrl', ['$scope','$location','$http','Flash','auth', function($scope,$location,$http,Flash,auth) {
     $scope.fetch = function(){
 	if(!auth.isAuth()){
 	    $location.path('/login');
@@ -116,12 +138,12 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	$http.get(GW_LIST_THREADS_URL)
 	.then((res) => {
 	    // success
-	    console.log('list threads ok');
 	    $scope.threads = res.data.items;
 	}, (res) => {
 	    // fail
-	    console.log('list threads fail');
 	    $scope.threads = null;
+	    Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+	    console.log('[FAIL] threads/list of threads');
 	});
     };
     
@@ -133,12 +155,13 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	$http.delete(GW_DELETE_THREAD_URL + threadId + '/')
 	.then((res) => {
 	    // success
-	    console.log('delete thread ok');
+	    Flash.create('success', '<strong>Well done!</strong> You successfully removed thread.');
 	    $location.path('/threads');
 	    $scope.fetch();
 	}, (res) => {
 	    // fail
-	    console.log('delete thread fail');
+	    Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+	    console.log('[FAIL] threads/thread remove');
 	});
     };
     
@@ -147,7 +170,7 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	    $location.path('/login');
 	}
 	
-	$location.path('/thread/'+threadId+'/');
+	$location.path('/thread/'+threadId);
     };
     
     $scope.createThread = function(){
