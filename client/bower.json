@@ -13,6 +13,8 @@
     "html5-boilerplate": "latest",
     "angular-bootstrap": "latest",
     "bootstrap": "latest",
-    "angular-flash-alert": "latest"
+    "angular-flash-alert": "latest",
+    "angular-loading-bar": "latest",
+    "angular-animate":"latest"
   }
 }
