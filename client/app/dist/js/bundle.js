@@ -41895,6 +41895,14 @@
 										console.log('create thread fail');
 							});
 				};
+
+				$scope.back = function () {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							$location.path('/threads');
+				};
 	}]).controller('ThreadViewCtrl', ['$scope', '$location', '$http', '$routeParams', 'auth', function ($scope, $location, $http, $routeParams, auth) {
 				$scope.fetch = function () {
 							if (!auth.isAuth()) {
@@ -41934,6 +41942,14 @@
 							}
 
 							console.log('remove thread ok');
+				};
+
+				$scope.back = function () {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							$location.path('/threads');
 				};
 
 				$scope.fetch();
@@ -42015,11 +42031,24 @@
 					$http.post(GW_CREATE_MESSAGE_URL, JSON.stringify({ 'author': authorId, 'thread': threadId, 'content': $scope.messageContent })).then(function (res) {
 							// success
 							console.log('create message ok');
+							$location.replace();
+							$location.search('thread', null);
 							$location.path('/thread/' + threadId);
 					}, function (res) {
 							// fail
 							console.log('create message fail');
 					});
+			};
+
+			$scope.back = function () {
+					if (!auth.isAuth()) {
+							$location.path('/login');
+					}
+
+					var threadId = $location.search()['thread'];
+					$location.replace();
+					$location.search('thread', null);
+					$location.path('/thread/' + threadId);
 			};
 	}]);
 

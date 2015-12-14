@@ -26,11 +26,23 @@ angular.module('simpleForum.message', ['ngRoute'])
 	).then((res) => {
 	    // success
 	    console.log('create message ok');
+	    $location.replace();
+	    $location.search('thread', null);
 	    $location.path('/thread/' + threadId);
 	}, (res) => {
 	    // fail
 	    console.log('create message fail');
 	});
-
+    };
+    
+    $scope.back = function(){
+	if(!auth.isAuth()){
+	    $location.path('/login');
+	}
+	
+	let threadId = $location.search()['thread'];
+	$location.replace();
+	$location.search('thread', null);
+	$location.path('/thread/' + threadId);
     };
 }]);

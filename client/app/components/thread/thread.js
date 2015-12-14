@@ -43,9 +43,15 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	    // fail
 	    console.log('create thread fail');
 	});
-
     };
     
+    $scope.back = function(){
+	if(!auth.isAuth()){
+	    $location.path('/login');
+	}
+	
+	$location.path('/threads');
+    };
 }])
 
 .controller('ThreadViewCtrl', ['$scope','$location','$http','$routeParams','auth', function($scope,$location,$http,$routeParams,auth) {
@@ -88,6 +94,14 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	}
 	
 	console.log('remove thread ok');
+    };
+    
+    $scope.back = function(){
+	if(!auth.isAuth()){
+	    $location.path('/login');
+	}
+	
+	$location.path('/threads');
     };
     
     $scope.fetch();

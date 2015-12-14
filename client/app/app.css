@@ -62,18 +62,25 @@ body {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-
 .threads-heading{
 	margin-bottom: 10px;
 }
-
 .message-heading-rm{
 	margin-left: 15px;
 	cursor: pointer;
 }
+.col-0{
+	width: 65%;
+}
+.col-1{
+	width: 25%;
+}
+.col-2{
+	width: 10%;
+}
+
 
 /* message */
-
 .form-message {
   max-width: 330px;
   padding: 15px;

@@ -1,9 +1,16 @@
-<div class="container">
-	<form class="form-message" role="form" ng-submit="create()">
-		<h2 class="form-message-heading">New message</h2>
-		<label for="messageContent" class="sr-only">Message content</label> <input
-			type="text" id="messageContent" class="form-control"
-			placeholder="Message content" ng-model="messageContent" required autofocus>
-		<button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
-	</form>
-</div>
+<h2 class="threads-heading">
+	<div class="btn-group" role="group">
+		<button type="button" class="btn btn-default" ng-click="back()">
+			<span class="glyphicon glyphicon-chevron-left"></span>
+		</button>
+	</div>
+	New message
+</h2>
+<form class="form-message" role="form" ng-submit="create()">
+	<div class="form-group">
+		<label for="messageContent" class="sr-only">Message content</label>
+		<textarea class="form-control" rows="5" id="messageContent" placeholder="Message content" ng-model="messageContent" required
+		autofocus></textarea>
+	</div>
+	<button class="btn btn-lg btn-primary btn-block" type="submit">Create</button>
+</form>
