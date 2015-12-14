@@ -1,7 +1,12 @@
-<h2 class="threads-heading">Threads</h2>
+<h2 class="threads-heading">
+	Threads
+	<div class="btn-group" role="group">
+		<button type="button" class="btn btn-success" ng-click="createThread()"><span class="glyphicon glyphicon-plus"></span></button>
+	</div>
+</h2>
 <table class="table table-striped">
 	<tr ng-repeat="x in threads">
-    	<td>{{ x }}</td>
+    	<td>thread title</td>
     	<td>
     		<button type="button" class="btn btn-default btn-sm" aria-label="Open" ng-click="messages(999)">
   				<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>

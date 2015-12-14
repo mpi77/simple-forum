@@ -66,6 +66,30 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	});
     };
     
+    $scope.createMessage = function(threadId){
+	if(!auth.isAuth()){
+	    $location.path('/login');
+	}
+	
+	$location.url('/message').search({thread:threadId});
+    };
+    
+    $scope.removeMessage = function(messageId){
+	if(!auth.isAuth()){
+	    $location.path('/login');
+	}
+	
+	console.log('remove message ok');
+    };
+    
+    $scope.removeThread = function(threadId){
+	if(!auth.isAuth()){
+	    $location.path('/login');
+	}
+	
+	console.log('remove thread ok');
+    };
+    
     $scope.fetch();
 }])
 
@@ -110,6 +134,14 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	}
 	
 	$location.path('/thread/'+threadId+'/');
+    };
+    
+    $scope.createThread = function(){
+	if(!auth.isAuth()){
+	    $location.path('/login');
+	}
+	
+	$location.path('/thread');
     };
     
     $scope.fetch();
