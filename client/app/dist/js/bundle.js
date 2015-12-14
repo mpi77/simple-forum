@@ -41912,6 +41912,30 @@
 							});
 				};
 
+				$scope.createMessage = function (threadId) {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							$location.url('/message').search({ thread: threadId });
+				};
+
+				$scope.removeMessage = function (messageId) {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							console.log('remove message ok');
+				};
+
+				$scope.removeThread = function (threadId) {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							console.log('remove thread ok');
+				};
+
 				$scope.fetch();
 	}]).controller('ThreadListCtrl', ['$scope', '$location', '$http', 'auth', function ($scope, $location, $http, auth) {
 				$scope.fetch = function () {
@@ -41954,6 +41978,14 @@
 							$location.path('/thread/' + threadId + '/');
 				};
 
+				$scope.createThread = function () {
+							if (!auth.isAuth()) {
+										$location.path('/login');
+							}
+
+							$location.path('/thread');
+				};
+
 				$scope.fetch();
 	}]);
 
@@ -41963,12 +41995,33 @@
 
 	'use strict';
 
+	var GW_CREATE_MESSAGE_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
+
 	angular.module('simpleForum.message', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
-	  $routeProvider.when('/message', {
-	    templateUrl: 'components/message/create.html',
-	    controller: 'CreateMessageCtrl'
-	  });
-	}]).controller('CreateMessageCtrl', [function () {}]);
+			$routeProvider.when('/message', {
+					templateUrl: 'components/message/create.html',
+					controller: 'MessageCreateCtrl',
+					css: ['components/message/message.css']
+			});
+	}]).controller('MessageCreateCtrl', ['$scope', '$location', '$http', '$routeParams', 'auth', function ($scope, $location, $http, $routeParams, auth) {
+			$scope.create = function () {
+					if (!auth.isAuth()) {
+							$location.path('/login');
+					}
+
+					var threadId = $location.search()['thread'];
+					var authorId = 1; //auth.getUser.id
+
+					$http.post(GW_CREATE_MESSAGE_URL, JSON.stringify({ 'author': authorId, 'thread': threadId, 'content': $scope.messageContent })).then(function (res) {
+							// success
+							console.log('create message ok');
+							$location.path('/thread/' + threadId);
+					}, function (res) {
+							// fail
+							console.log('create message fail');
+					});
+			};
+	}]);
 
 /***/ },
 /* 14 */
