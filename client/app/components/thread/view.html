@@ -6,8 +6,18 @@
 	</div>
 	Thread content
 	<div class="btn-group" role="group">
-		<button type="button" class="btn btn-success" ng-click="createMessage(999)"><span class="glyphicon glyphicon-plus"></span></button>
-		<button type="button" class="btn btn-danger" ng-click="removeThread(999)"><span class="glyphicon glyphicon-trash"></span></button>
+		<button type="button" class="btn btn-success"
+			ng-click="createMessage()">
+			<span class="glyphicon glyphicon-plus"></span>
+		</button>
+		<button type="button" class="btn btn-primary"
+			ng-click="threadMembers()" data-toggle="modal"
+			data-target="#membersModal">
+			<span class="glyphicon glyphicon-user"></span>
+		</button>
+		<button type="button" class="btn btn-danger" ng-click="removeThread()">
+			<span class="glyphicon glyphicon-trash"></span>
+		</button>
 	</div>
 </h2>
 <div class="clearfix"></div>
@@ -15,8 +25,35 @@
 <div class="panel panel-default" ng-repeat="x in content">
 	<div class="panel-heading">
 		<div class="pull-left">author name</div>
-		<div class="pull-right">2015-01-01 00:00:00 <a class="message-heading-rm" ng-click="removeMessage(888,999)"><span class="glyphicon glyphicon-trash"></span></a></div>
+		<div class="pull-right">
+			2015-01-01 00:00:00 <a class="message-heading-rm"
+				ng-click="removeMessage(888,999)"><span
+				class="glyphicon glyphicon-trash"></span></a>
+		</div>
 		<div class="clearfix"></div>
 	</div>
 	<div class="panel-body">message body</div>
+</div>
+
+<div class="modal fade" id="membersModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Thread members</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-striped">
+					<tr ng-repeat="x in thMembers">
+						<td class="col-0">member <span class="glyphicon glyphicon-king"></span></td>
+						<td class="col-1">from</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>

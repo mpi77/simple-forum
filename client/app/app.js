@@ -4,7 +4,9 @@ import 'jquery';
 import 'bootstrap';
 import 'angular';
 import 'angular-route';
+import 'angular-animate';
 import 'angular-flash-alert';
+import 'angular-loading-bar';
 
 import './services/auth.js';
 import './components/home/home.js';
@@ -15,6 +17,8 @@ import './components/navbar/navbar.js';
 
 angular.module('simpleForum', [
   'ngRoute',
+  'ngAnimate',
+  'angular-loading-bar',
   'flash',
   'simpleForum.home',
   'simpleForum.session',

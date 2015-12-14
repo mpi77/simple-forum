@@ -2,6 +2,7 @@
 
 const GW_CREATE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
 const GW_THREAD_MESSAGES_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
+const GW_THREAD_MEMBERS_URL = "http://private-c7d92-pwx.apiary-mock.com/threadMembers/";
 const GW_DELETE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
 const GW_DELETE_MESSAGE_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
 const GW_LIST_THREADS_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
@@ -74,19 +75,39 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	});
     };
     
-    $scope.createMessage = function(threadId){
+    $scope.createMessage = function(){
 	if(!auth.isAuth()){
 	    $location.path('/login');
 	}
 	
+	let threadId = $routeParams.threadId;
 	$location.url('/message').search({thread:threadId});
     };
     
-    $scope.removeMessage = function(messageId, threadId){
+    $scope.threadMembers = function(){
 	if(!auth.isAuth()){
 	    $location.path('/login');
 	}
 	
+	let threadId = $routeParams.threadId;
+	$http.get(GW_THREAD_MEMBERS_URL + '?q=(thread=' + threadId + ')')
+	.then((res) => {
+	    // success
+	    $scope.thMembers = res.data.items;
+	}, (res) => {
+	    // fail
+	    $scope.thMembers = null;
+	    Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+	    console.log('[FAIL] view/thread members');
+	});
+    };
+    
+    $scope.removeMessage = function(messageId){
+	if(!auth.isAuth()){
+	    $location.path('/login');
+	}
+	
+	let threadId = $routeParams.threadId;
 	$http.delete(GW_DELETE_MESSAGE_URL + messageId + '/')
 	.then((res) => {
 	    // success
@@ -100,11 +121,12 @@ angular.module('simpleForum.thread', [ 'ngRoute' ])
 	});
     };
     
-    $scope.removeThread = function(threadId){
+    $scope.removeThread = function(){
 	if(!auth.isAuth()){
 	    $location.path('/login');
 	}
 	
+	let threadId = $routeParams.threadId;
 	$http.delete(GW_DELETE_THREAD_URL + threadId + '/')
 	.then((res) => {
 	    // success
