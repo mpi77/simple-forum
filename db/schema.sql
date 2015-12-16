@@ -23,7 +23,9 @@ CREATE TABLE IF NOT EXISTS `simpleforum`.`user` (
   `firstname` VARCHAR(45) NULL COMMENT '',
   `lastname` VARCHAR(45) NULL COMMENT '',
   PRIMARY KEY (`username`)  COMMENT '')
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -42,7 +44,9 @@ CREATE TABLE IF NOT EXISTS `simpleforum`.`thread` (
     REFERENCES `simpleforum`.`user` (`username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -67,7 +71,9 @@ CREATE TABLE IF NOT EXISTS `simpleforum`.`message` (
     REFERENCES `simpleforum`.`thread` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -84,7 +90,9 @@ CREATE TABLE IF NOT EXISTS `simpleforum`.`session` (
     REFERENCES `simpleforum`.`user` (`username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -107,7 +115,9 @@ CREATE TABLE IF NOT EXISTS `simpleforum`.`threadMember` (
     REFERENCES `simpleforum`.`thread` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
