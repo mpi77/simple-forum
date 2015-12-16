@@ -367,7 +367,7 @@ PWX RESTful API
     
             {
                 "author": 777,
-                "tsRead": 999,
+                "thread": 999,
                 "tsFrom": "2015-01-01T00:00:00.000Z",
                 "tsTo": "2015-01-01T00:00:00.000Z"
             }
