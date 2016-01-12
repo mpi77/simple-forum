@@ -2,9 +2,9 @@ FORMAT: 1A
 
 # pwx
 
-PWX RESTful API
+Simple Forum RESTful API
 
-## Thread collection [/threads/{?q}{?e}]
+## Thread collection [/threads/{?e}]
 
 ### List all Threads [GET]
 + Request
@@ -13,7 +13,6 @@ PWX RESTful API
             Authorization: Bearer SOMEtokenCODE
         
 + Parameters
-    + q (required, string) ... Query string in format: (author=int)
     + e (optional, string) ... Expandable string in format: (thread)
 
 + Response 200 (application/json)
@@ -47,18 +46,10 @@ PWX RESTful API
                 }
             ]
         }
+        
++ Response 204 (application/json)
 
 + Response 403 (application/json)
-
-        {
-            "msg": "Forbidden access to resource."
-        }
-        
-+ Response 404 (application/json)
-
-        {
-            "msg": "Resource was not found."
-        }
 
 ### Create a new Thread [POST]
 + Request (application/json)
@@ -74,24 +65,15 @@ PWX RESTful API
         
 
 + Response 201 (application/json)
-        
-        {
-            "msg": "Resource created."
-        }
+
++ Response 400 (application/json)
 
 + Response 403 (application/json)
 
-        {
-            "msg": "Forbidden access to resource."
-        }
-        
-+ Response 404 (application/json)
++ Response 500 (application/json)
 
-        {
-            "msg": "Resource was not found."
-        }
-        
-## Thread item [/threads/{thread_id}/{?e}]
+  
+## Thread item [/threads/{thread_id}/]
 
 ### View a thread item [GET]
 + Request
@@ -101,7 +83,6 @@ PWX RESTful API
         
 + Parameters
     + thread_id (required, number) - ID of the thread
-    + e (optional, string) ... Expandable string in format: (author)
     
 + Response 200 (application/json)
 
@@ -110,31 +91,22 @@ PWX RESTful API
                 "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/999\/",
                 "mediaType": "application\/json",
                 "id": 999,
-                "tsCreate": "2015-01-01T00:00:00.000Z",
-                "tsUpdate": "2015-01-01T00:00:00.000Z",
-                "tsLastChange": "2015-01-01T00:00:00.000Z"
+                "tsCreate": "2015-01-01 00:00:00",
+                "tsLastMessage": "2015-01-01 00:00:00"
             },
             "author": {
                 "_meta": {
-                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/john\/",
                     "mediaType": "application\/json",
-                    "id": 777
+                    "id": "john"
                 }
             },
             "title": "thread title"
         }
 
 + Response 403 (application/json)
-
-        {
-            "msg": "Forbidden access to resource."
-        }
         
 + Response 404 (application/json)
-
-        {
-            "msg": "Resource was not found."
-        }
 
 ### Delete a Thread [DELETE]
 + Request
@@ -145,11 +117,13 @@ PWX RESTful API
 + Parameters
     + thread_id (required, number) - ID of the thread
     
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
-        {
-            "msg": "Resource removed."
-        }
++ Response 403 (application/json)
+        
++ Response 404 (application/json)
+
++ Response 500 (application/json)
 
 
 ## Message collection [/messages/{?q}{?e}]
@@ -161,7 +135,7 @@ PWX RESTful API
             Authorization: Bearer SOMEtokenCODE
         
 + Parameters
-    + q (required, string) ... Query string in format: (thread=int)
+    + q (required, string) ... Query string in format: (threadId=int)
     + e (optional, string) ... Expandable string in format: (message)
 
 + Response 200 (application/json)
@@ -195,18 +169,10 @@ PWX RESTful API
                 }
             ]
         }
+        
++ Response 204 (application/json)
 
 + Response 403 (application/json)
-
-        {
-            "msg": "Forbidden access to resource."
-        }
-        
-+ Response 404 (application/json)
-
-        {
-            "msg": "Resource was not found."
-        }
 
 ### Create a new Message [POST]
     
@@ -218,29 +184,19 @@ PWX RESTful API
     + Body
     
             {
-                "author": 777,
                 "thread": 999,
                 "content": "message content"
             }
 
 + Response 201 (application/json)
-        
-        {
-            "msg": "Resource created."
-        }
 
++ Response 400 (application/json)
+        
 + Response 403 (application/json)
 
-        {
-            "msg": "Forbidden access to resource."
-        }
-        
-+ Response 404 (application/json)
++ Response 500 (application/json)
 
-        {
-            "msg": "Resource was not found."
-        }
-        
+   
 ## Message item [/messages/{message_id}/{?e}]
 
 ### View a message item [GET]
@@ -251,7 +207,6 @@ PWX RESTful API
         
 + Parameters
     + message_id (required, number) - ID of the message
-    + e (optional, string) ... Expandable string in format: (author)
     
 + Response 200 (application/json)
 
@@ -260,30 +215,21 @@ PWX RESTful API
                 "href": "https:\/\/api.sf.sd2.cz\/v1\/messages\/888\/",
                 "mediaType": "application\/json",
                 "id": 888,
-                "tsCreate": "2015-01-01T00:00:00.000Z",
-                "tsRead": "2015-01-01T00:00:00.000Z"
+                "tsCreate": "2015-01-01 00:00:00"
             },
             "author": {
                 "_meta": {
-                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/john\/",
                     "mediaType": "application\/json",
-                    "id": 777
+                    "id": "john"
                 }
             },
             "content": "message content"
         }
 
 + Response 403 (application/json)
-
-        {
-            "msg": "Forbidden access to resource."
-        }
         
 + Response 404 (application/json)
-
-        {
-            "msg": "Resource was not found."
-        }
 
 ### Delete a message [DELETE]
 + Request
@@ -294,13 +240,16 @@ PWX RESTful API
 + Parameters
     + message_id (required, number) - ID of the message
     
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
-        {
-            "msg": "Resource removed."
-        }
++ Response 403 (application/json)
         
-## Thread members collection [/threadMembers/{?q}{?e}]
++ Response 404 (application/json)
+
++ Response 500 (application/json)
+
+
+## Thread member collection [/threadMembers/{?q}{?e}]
 
 ### List all membership [GET]
 + Request
@@ -309,8 +258,8 @@ PWX RESTful API
             Authorization: Bearer SOMEtokenCODE
         
 + Parameters
-    + q (required, string) ... Query string in format: (thread=int;author=int)
-    + e (optional, string) ... Expandable string in format: (thread,author)
+    + q (required, string) ... Query string in format: (threadId=int)
+    + e (optional, string) ... Expandable string in format: (threadMember)
 
 + Response 200 (application/json)
 
@@ -344,118 +293,12 @@ PWX RESTful API
             ]
         }
 
-+ Response 403 (application/json)
-
-        {
-            "msg": "Forbidden access to resource."
-        }
++ Response 204 (application/json)
         
-+ Response 404 (application/json)
-
-        {
-            "msg": "Resource was not found."
-        }
-
-### Create a new membership [POST]
-    
-+ Request (application/json)
-    + Headers 
-    
-            Authorization: Bearer SOMEtokenCODE
-        
-    + Body
-    
-            {
-                "author": 777,
-                "thread": 999,
-                "tsFrom": "2015-01-01T00:00:00.000Z",
-                "tsTo": "2015-01-01T00:00:00.000Z"
-            }
-
-+ Response 201 (application/json)
-        
-        {
-            "msg": "Resource created."
-        }
++ Response 400 (application/json)
 
 + Response 403 (application/json)
 
-        {
-            "msg": "Forbidden access to resource."
-        }
-        
-+ Response 404 (application/json)
-
-        {
-            "msg": "Resource was not found."
-        }
-
-## Thread member item [/threadMembers/{threadMember_id}/{?e}]
-
-### View a thread member item [GET]
-+ Request
-    + Headers 
-    
-            Authorization: Bearer SOMEtokenCODE
-        
-+ Parameters
-    + threadMember_id (required, number) - ID of the membership
-    + e (optional, string) ... Expandable string in format: (author, thread)
-    
-+ Response 200 (application/json)
-
-        {
-            "_meta": {
-                "href": "https:\/\/api.sf.sd2.cz\/v1\/threadMembers\/666\/",
-                "mediaType": "application\/json",
-                "id": 666,
-                "tsCreate": "2015-01-01T00:00:00.000Z",
-                "tsUpdate": "2015-01-01T00:00:00.000Z",
-                "tsFrom": "2015-01-01T00:00:00.000Z",
-                "tsTo": "2015-01-01T00:00:00.000Z"
-            },
-            "thread": {
-                "_meta": {
-                    "href": "https:\/\/api.sf.sd2.cz\/v1\/threads\/999\/",
-                    "mediaType": "application\/json",
-                    "id": 999
-                }
-            },
-            "author": {
-                "_meta": {
-                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
-                    "mediaType": "application\/json",
-                    "id": 777
-                }
-            }
-        }
-
-+ Response 403 (application/json)
-
-        {
-            "msg": "Forbidden access to resource."
-        }
-        
-+ Response 404 (application/json)
-
-        {
-            "msg": "Resource was not found."
-        }
-
-### Delete a message [DELETE]
-+ Request
-    + Headers 
-    
-            Authorization: Bearer SOMEtokenCODE
-        
-+ Parameters
-    + threadMember_id (required, number) - ID of the membership
-    
-+ Response 201 (application/json)
-
-        {
-            "msg": "Resource removed."
-        }
 
 ## Session item [/session/]
 
@@ -467,7 +310,7 @@ PWX RESTful API
             "password": "pass"
         }
         
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
         {
             "_meta": {
@@ -477,30 +320,23 @@ PWX RESTful API
             "access_token": "...stringACCESStoken...",
             "user" : {
                 "_meta": {
-                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+                    "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/john\/",
                     "mediaType": "application\/json",
-                    "id": 777,
-                    "tsCreate": "2015-01-01T00:00:00.000Z",
-                    "tsUpdate": "2015-01-01T00:00:00.000Z"
+                    "id": "john"
                 },
                 "firstname": "John",
-                "lastname": "Smith",
-                "nick": "js",
-                "email": "js@example.com"
+                "lastname": "Smith"
             }
         }
+        
++ Response 400 (application/json)
 
 + Response 403 (application/json)
-
-        {
-            "msg": "Forbidden access to resource."
-        }
         
 + Response 404 (application/json)
 
-        {
-            "msg": "Resource was not found."
-        }
++ Response 500 (application/json)
+
     
 ## User item [/users/{user_id}/]
 
@@ -511,32 +347,22 @@ PWX RESTful API
             Authorization: Bearer SOMEtokenCODE
         
 + Parameters
-    + user_id (required, number) - ID of the user
+    + user_id (required, string) - ID of the user
     
 + Response 200 (application/json)
 
         {
             "_meta": {
-                "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/777\/",
+                "href": "https:\/\/api.sf.sd2.cz\/v1\/users\/john\/",
                 "mediaType": "application\/json",
-                "id": 777,
-                "tsCreate": "2015-01-01T00:00:00.000Z",
-                "tsUpdate": "2015-01-01T00:00:00.000Z"
+                "id": "john"
             },
             "firstname": "John",
-            "lastname": "Smith",
-            "nick": "js",
-            "email": "js@example.com"
+            "lastname": "Smith"
         }
 
 + Response 403 (application/json)
-
-        {
-            "msg": "Forbidden access to resource."
-        }
         
 + Response 404 (application/json)
 
-        {
-            "msg": "Resource was not found."
-        }
++ Response 500 (application/json)
