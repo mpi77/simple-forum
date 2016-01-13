@@ -70,12 +70,15 @@ body {
 	cursor: pointer;
 }
 .col-0{
-	width: 65%;
+	width: 55%;
 }
 .col-1{
-	width: 25%;
+	width: 15%;
 }
 .col-2{
+	width: 20%;
+}
+.col-3{
 	width: 10%;
 }
 
@@ -105,4 +108,12 @@ body {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+#membersModal .col-0{
+	width: 50%;
+}
+
+#membersModal .col-1{
+	width: 50%;
 }

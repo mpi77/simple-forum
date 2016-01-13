@@ -18,14 +18,14 @@ import './components/navbar/navbar.js';
 angular.module('simpleForum', [
   'ngRoute',
   'ngAnimate',
+  'simpleForum.auth',
   'angular-loading-bar',
-  'flash',
   'simpleForum.home',
   'simpleForum.session',
   'simpleForum.thread',
   'simpleForum.message',
-  'simpleForum.auth',
-  'simpleForum.navbar'
+  'simpleForum.navbar',
+  'flash'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/home'});
