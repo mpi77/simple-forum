@@ -1,13 +1,13 @@
 'use strict';
 
-const GW_LOGIN_URL = "http://private-c7d92-pwx.apiary-mock.com/session/";
-const GW_FETCH_USER_URL = "GEThttp://private-c7d92-pwx.apiary-mock.com/users/";
+const GW_LOGIN_URL = "https://api.sf.sd2.cz/session/";
+const GW_FETCH_USER_URL = "https://api.sf.sd2.cz/users/";
 
 class Auth {
   constructor($http) {
     this.$http = $http;
     this.token = localStorage.getItem('token');
-    this.user  = localStorage.getItem('user');
+    this.user  = JSON.parse(localStorage.getItem('user'));
   }
 
   isAuth() {
@@ -22,12 +22,14 @@ class Auth {
     return this.$http.post(GW_LOGIN_URL,
                       JSON.stringify({username, password})
     ).then((res) => {
-      this.token = res.data.access_token;
-      this.user = res.data.user;
-      localStorage.setItem('token', this.token);
-      localStorage.setItem('user', this.user);
-      
-      successCallback();
+    	console.log(res);
+    	if(res != null){
+	      this.token = res.data.access_token;
+	      this.user = res.data.user;
+	      localStorage.setItem('token', this.token);
+	      localStorage.setItem('user', JSON.stringify(this.user));
+	      successCallback();
+    	}
     });
   }
 
@@ -51,18 +53,19 @@ class AuthInterceptor {
     }
     
     request(config) {
-	const token = localStorage.getItem('token');
-	if (token) {
-	    config.headers.Authorization = 'Bearer ' + token;
-	}
-	return config;
+    	const token = localStorage.getItem('token');
+    	if (token) {
+    		config.headers.Authorization = 'Bearer ' + token;
+    	}
+    	return config;
     }
   
     responseError(rejection){
-	if(rejection.status === 401 || rejection.status === 403) {
-	    $location.path('/login');
-	}
-	$q.reject(rejection);
+    	if(rejection.status == 401 || rejection.status == 403) {
+    		$location.path('/login');
+    	}
+    	console.log(rejection);
+    	return(rejection);
     }
 }
 
