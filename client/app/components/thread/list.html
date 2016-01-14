@@ -5,16 +5,27 @@
 	</div>
 </h2>
 <table class="table table-striped">
-	<tr ng-repeat="x in threads">
-    	<td class="col-0">thread title</td>
-    	<td class="col-1">last message</td>
-    	<td class="col-2">
-    		<button type="button" class="btn btn-default btn-sm" aria-label="Open" ng-click="messages(999)">
-  				<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-			</button>
-    		<button type="button" class="btn btn-default btn-sm" aria-label="Delete" ng-click="remove(999)">
-  				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-			</button>
-    	</td>
-  	</tr>
+	<thead>
+      <tr>
+        <th>Title</th>
+        <th>Owner</th>
+        <th>Last message</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+		<tr ng-repeat="x in threads">
+	    	<td class="col-0">{{ x.title }}</td>
+	    	<td class="col-1">{{ x.author._meta.id }}</td>
+	    	<td class="col-2">{{ x._meta.tsLastMessage }}</td>
+	    	<td class="col-3">
+	    		<button type="button" class="btn btn-default btn-sm" aria-label="Open" ng-click="messages(x._meta.id)">
+	  				<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+				</button>
+	    		<button type="button" class="btn btn-default btn-sm" aria-label="Delete" ng-click="remove(x._meta.id)" ng-if="isOwner(x.author._meta.id)">
+	  				<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+				</button>
+	    	</td>
+	  	</tr>
+  	</tbody>
 </table>

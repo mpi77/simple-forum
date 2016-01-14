@@ -7,6 +7,6 @@
 <form name="createThreadForm" class="form-thread" role="form" ng-submit="create()">
 	<label for="threadName" class="sr-only">Thread name</label> <input
 		type="text" id="threadName" class="form-control"
-		placeholder="Thread name" ng-model="threadName" ng-required="true" ng-trim="true" ng-minlength="3" ng-maxlength="100" required autofocus>
+		placeholder="Thread name" ng-model="threadName" ng-required="true" ng-trim="true" ng-minlength="3" ng-maxlength="150" required autofocus>
 	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="createThreadForm.$invalid">Create</button>
 </form>

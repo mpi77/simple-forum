@@ -4,7 +4,7 @@
 			<span class="glyphicon glyphicon-chevron-left"></span>
 		</button>
 	</div>
-	Thread content
+	{{ thread.title }}
 	<div class="btn-group" role="group">
 		<button type="button" class="btn btn-success"
 			ng-click="createMessage()">
@@ -15,7 +15,7 @@
 			data-target="#membersModal">
 			<span class="glyphicon glyphicon-user"></span>
 		</button>
-		<button type="button" class="btn btn-danger" ng-click="removeThread()">
+		<button type="button" class="btn btn-danger" ng-click="removeThread()" ng-if="isOwner(thread.author._meta.id)">
 			<span class="glyphicon glyphicon-trash"></span>
 		</button>
 	</div>
@@ -24,15 +24,15 @@
 
 <div class="panel panel-default" ng-repeat="x in content">
 	<div class="panel-heading">
-		<div class="pull-left">author name</div>
+		<div class="pull-left">{{ x.author._meta.id }}</div>
 		<div class="pull-right">
-			2015-01-01 00:00:00 <a class="message-heading-rm"
-				ng-click="removeMessage(888,999)"><span
+			{{ x._meta.tsCreate }} <a class="message-heading-rm"
+				ng-click="removeMessage(x._meta.id)" ng-if="isOwner(x.author._meta.id)"><span
 				class="glyphicon glyphicon-trash"></span></a>
 		</div>
 		<div class="clearfix"></div>
 	</div>
-	<div class="panel-body">message body</div>
+	<div class="panel-body">{{ x.content }}</div>
 </div>
 
 <div class="modal fade" id="membersModal" tabindex="-1" role="dialog"
@@ -49,8 +49,8 @@
 			<div class="modal-body">
 				<table class="table table-striped">
 					<tr ng-repeat="x in thMembers">
-						<td class="col-0">member <span class="glyphicon glyphicon-king"></span></td>
-						<td class="col-1">from</td>
+						<td class="col-0">{{ x.member._meta.id }} <span ng-if="isOwnerXY(x.member._meta.id,thread.author._meta.id)" class="glyphicon glyphicon-king"></span></td>
+						<td class="col-1">{{ x._meta.tsCreate }}</td>
 					</tr>
 				</table>
 			</div>
