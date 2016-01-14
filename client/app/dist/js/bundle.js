@@ -72,7 +72,7 @@
 
 	__webpack_require__(26);
 
-	angular.module('simpleForum', ['ngRoute', 'ngAnimate', 'angular-loading-bar', 'flash', 'simpleForum.home', 'simpleForum.session', 'simpleForum.thread', 'simpleForum.message', 'simpleForum.auth', 'simpleForum.navbar']).config(['$routeProvider', function ($routeProvider) {
+	angular.module('simpleForum', ['ngRoute', 'ngAnimate', 'simpleForum.auth', 'angular-loading-bar', 'simpleForum.home', 'simpleForum.session', 'simpleForum.thread', 'simpleForum.message', 'simpleForum.navbar', 'flash']).config(['$routeProvider', function ($routeProvider) {
 	  $routeProvider.otherwise({ redirectTo: '/home' });
 	}]);
 
@@ -46467,8 +46467,8 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var GW_LOGIN_URL = "http://private-c7d92-pwx.apiary-mock.com/session/";
-	var GW_FETCH_USER_URL = "GEThttp://private-c7d92-pwx.apiary-mock.com/users/";
+	var GW_LOGIN_URL = "https://api.sf.sd2.cz/session/";
+	var GW_FETCH_USER_URL = "https://api.sf.sd2.cz/users/";
 
 	var Auth = (function () {
 	  function Auth($http) {
@@ -46476,7 +46476,7 @@
 
 	    this.$http = $http;
 	    this.token = localStorage.getItem('token');
-	    this.user = localStorage.getItem('user');
+	    this.user = JSON.parse(localStorage.getItem('user'));
 	  }
 
 	  _createClass(Auth, [{
@@ -46495,12 +46495,14 @@
 	      var _this = this;
 
 	      return this.$http.post(GW_LOGIN_URL, JSON.stringify({ username: username, password: password })).then(function (res) {
-	        _this.token = res.data.access_token;
-	        _this.user = res.data.user;
-	        localStorage.setItem('token', _this.token);
-	        localStorage.setItem('user', _this.user);
-
-	        successCallback();
+	        console.log(res);
+	        if (res != null) {
+	          _this.token = res.data.access_token;
+	          _this.user = res.data.user;
+	          localStorage.setItem('token', _this.token);
+	          localStorage.setItem('user', JSON.stringify(_this.user));
+	          successCallback();
+	        }
 	      });
 	    }
 	  }, {
@@ -46542,10 +46544,11 @@
 	  }, {
 	    key: "responseError",
 	    value: function responseError(rejection) {
-	      if (rejection.status === 401 || rejection.status === 403) {
+	      if (rejection.status == 401 || rejection.status == 403) {
 	        $location.path('/login');
 	      }
-	      $q.reject(rejection);
+	      console.log(rejection);
+	      return rejection;
 	    }
 	  }]);
 
@@ -46611,194 +46614,243 @@
 
 	'use strict';
 
-	var GW_CREATE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
-	var GW_THREAD_MESSAGES_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
-	var GW_THREAD_MEMBERS_URL = "http://private-c7d92-pwx.apiary-mock.com/threadMembers/";
-	var GW_DELETE_THREAD_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
-	var GW_DELETE_MESSAGE_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
-	var GW_LIST_THREADS_URL = "http://private-c7d92-pwx.apiary-mock.com/threads/";
+	var GW_CREATE_THREAD_URL = "https://api.sf.sd2.cz/threads/";
+	var GW_THREAD_MESSAGES_URL = "https://api.sf.sd2.cz/messages/";
+	var GW_THREAD_MEMBERS_URL = "https://api.sf.sd2.cz/threadMembers/";
+	var GW_DELETE_THREAD_URL = "https://api.sf.sd2.cz/threads/";
+	var GW_DELETE_MESSAGE_URL = "https://api.sf.sd2.cz/messages/";
+	var GW_LIST_THREADS_URL = "https://api.sf.sd2.cz/threads/";
+	var GW_THREAD_URL = "https://api.sf.sd2.cz/threads/";
 
 	angular.module('simpleForum.thread', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
-				$routeProvider.when('/thread', {
-							templateUrl: 'components/thread/create.html',
-							controller: 'ThreadCreateCtrl',
-							css: ['components/thread/thread.css']
-				});
-				$routeProvider.when('/thread/:threadId', {
-							templateUrl: 'components/thread/view.html',
-							controller: 'ThreadViewCtrl',
-							css: ['components/thread/thread.css']
-				});
-				$routeProvider.when('/threads', {
-							templateUrl: 'components/thread/list.html',
-							controller: 'ThreadListCtrl',
-							css: ['components/thread/thread.css']
-				});
+		$routeProvider.when('/thread', {
+			templateUrl: 'components/thread/create.html',
+			controller: 'ThreadCreateCtrl',
+			css: ['components/thread/thread.css']
+		});
+		$routeProvider.when('/thread/:threadId', {
+			templateUrl: 'components/thread/view.html',
+			controller: 'ThreadViewCtrl',
+			css: ['components/thread/thread.css']
+		});
+		$routeProvider.when('/threads', {
+			templateUrl: 'components/thread/list.html',
+			controller: 'ThreadListCtrl',
+			css: ['components/thread/thread.css']
+		});
 	}]).controller('ThreadCreateCtrl', ['$scope', '$location', '$http', 'Flash', 'auth', function ($scope, $location, $http, Flash, auth) {
-				$scope.create = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+		$scope.create = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
 
-							var threadName = $scope.threadName;
+			var threadName = $scope.threadName;
 
-							$http.post(GW_CREATE_THREAD_URL, JSON.stringify({ 'title': threadName })).then(function (res) {
-										// success
-										Flash.create('success', '<strong>Well done!</strong> You successfully created new thread.');
-										$location.path('/threads');
-							}, function (res) {
-										// fail
-										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
-										console.log('[FAIL] create/thread create');
-							});
-				};
+			$http.post(GW_CREATE_THREAD_URL, JSON.stringify({ 'title': threadName })).then(function (res) {
+				// success
+				if (res.status == 201) {
+					Flash.create('success', '<strong>Well done!</strong> You successfully created new thread.');
+				} else {
+					Flash.create('danger', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				}
 
-				$scope.back = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+				$location.path('/threads');
+			}, function (res) {
+				// fail
+				Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				console.log('[FAIL] create/thread create');
+			});
+		};
 
-							$location.path('/threads');
-				};
+		$scope.back = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
+
+			$location.path('/threads');
+		};
 	}]).controller('ThreadViewCtrl', ['$scope', '$location', '$http', '$routeParams', 'Flash', 'auth', function ($scope, $location, $http, $routeParams, Flash, auth) {
-				$scope.fetch = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+		$scope.fetch = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
 
-							$http.get(GW_THREAD_MESSAGES_URL + '?q=(thread=' + $routeParams.threadId + ')').then(function (res) {
-										// success
-										$scope.content = res.data.items;
-							}, function (res) {
-										// fail
-										$scope.threads = null;
-										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
-										console.log('[FAIL] view/thread view');
-							});
-				};
+			$http.get(GW_THREAD_MESSAGES_URL + '?q=(threadId=' + $routeParams.threadId + ')&e=(message)&s=(tsCreate:desc)').then(function (res) {
+				// success
+				if (res.status == 204) {
+					Flash.create('info', 'This thread does not contain any message.');
+				}
+				if (res != null && res.data != null) {
+					$scope.content = res.data.items;
+				}
+			}, function (res) {
+				// fail
+				$scope.threads = null;
+				Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				console.log('[FAIL] view/thread view');
+			});
 
-				$scope.createMessage = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+			$http.get(GW_THREAD_URL + $routeParams.threadId + '/').then(function (res) {
+				// success
+				if (res != null && res.data != null) {
+					$scope.thread = res.data;
+				}
+			}, function (res) {
+				// fail
+				$scope.thread = null;
+				Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				console.log('[FAIL] view/thread view');
+			});
+		};
 
-							var threadId = $routeParams.threadId;
-							$location.url('/message').search({ thread: threadId });
-				};
+		$scope.createMessage = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
 
-				$scope.threadMembers = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+			var threadId = $routeParams.threadId;
+			$location.url('/message').search({ thread: threadId });
+		};
 
-							var threadId = $routeParams.threadId;
-							$http.get(GW_THREAD_MEMBERS_URL + '?q=(thread=' + threadId + ')').then(function (res) {
-										// success
-										$scope.thMembers = res.data.items;
-							}, function (res) {
-										// fail
-										$scope.thMembers = null;
-										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
-										console.log('[FAIL] view/thread members');
-							});
-				};
+		$scope.isOwner = function (x) {
+			return x == auth.getUser().username;
+		};
 
-				$scope.removeMessage = function (messageId) {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+		$scope.isOwnerXY = function (x, y) {
+			return x == y;
+		};
 
-							var threadId = $routeParams.threadId;
-							$http.delete(GW_DELETE_MESSAGE_URL + messageId + '/').then(function (res) {
-										// success
-										Flash.create('success', '<strong>Well done!</strong> You successfully removed message.');
-										$location.path('/thread/' + threadId);
-										$scope.fetch();
-							}, function (res) {
-										// fail
-										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
-										console.log('[FAIL] view/message remove');
-							});
-				};
+		$scope.threadMembers = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
 
-				$scope.removeThread = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+			var threadId = $routeParams.threadId;
+			$http.get(GW_THREAD_MEMBERS_URL + '?q=(threadId=' + threadId + ')&e=(threadMember)').then(function (res) {
+				// success
+				if (res != null && res.data != null) {
+					$scope.thMembers = res.data.items;
+				}
+			}, function (res) {
+				// fail
+				$scope.thMembers = null;
+				Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				console.log('[FAIL] view/thread members');
+			});
+		};
 
-							var threadId = $routeParams.threadId;
-							$http.delete(GW_DELETE_THREAD_URL + threadId + '/').then(function (res) {
-										// success
-										Flash.create('success', '<strong>Well done!</strong> You successfully removed thread.');
-										$location.path('/threads');
-										$scope.fetch();
-							}, function (res) {
-										// fail
-										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
-										console.log('[FAIL] view/thread remove');
-							});
-				};
+		$scope.removeMessage = function (messageId) {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
 
-				$scope.back = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
-
-							$location.path('/threads');
-				};
-
+			var threadId = $routeParams.threadId;
+			$http.delete(GW_DELETE_MESSAGE_URL + messageId + '/').then(function (res) {
+				// success
+				if (res.status == 200) {
+					Flash.create('success', '<strong>Well done!</strong> You successfully removed message.');
+				} else {
+					Flash.create('danger', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				}
+				$location.path('/thread/' + threadId);
 				$scope.fetch();
+			}, function (res) {
+				// fail
+				Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				console.log('[FAIL] view/message remove');
+			});
+		};
+
+		$scope.removeThread = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
+
+			var threadId = $routeParams.threadId;
+			$http.delete(GW_DELETE_THREAD_URL + threadId + '/').then(function (res) {
+				// success
+				if (res.status == 200) {
+					Flash.create('success', '<strong>Well done!</strong> You successfully removed thread.');
+				} else {
+					Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				}
+				$location.path('/threads');
+			}, function (res) {
+				// fail
+				Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				console.log('[FAIL] view/thread remove');
+			});
+		};
+
+		$scope.back = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
+
+			$location.path('/threads');
+		};
+
+		$scope.fetch();
 	}]).controller('ThreadListCtrl', ['$scope', '$location', '$http', 'Flash', 'auth', function ($scope, $location, $http, Flash, auth) {
-				$scope.fetch = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+		$scope.fetch = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
 
-							$http.get(GW_LIST_THREADS_URL).then(function (res) {
-										// success
-										$scope.threads = res.data.items;
-							}, function (res) {
-										// fail
-										$scope.threads = null;
-										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
-										console.log('[FAIL] threads/list of threads');
-							});
-				};
+			$http.get(GW_LIST_THREADS_URL + '?e=(thread)').then(function (res) {
+				// success
+				if (res.status == 204) {
+					Flash.create('info', 'We have not any thread. Please create a new one.');
+				}
+				if (res != null && res.data != null) {
+					$scope.threads = res.data.items;
+				}
+			}, function (res) {
+				// fail
+				$scope.threads = null;
+				Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				console.log('[FAIL] threads/list of threads');
+			});
+		};
 
-				$scope.remove = function (threadId) {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
+		$scope.isOwner = function (x) {
+			return x == auth.getUser().username;
+		};
 
-							$http.delete(GW_DELETE_THREAD_URL + threadId + '/').then(function (res) {
-										// success
-										Flash.create('success', '<strong>Well done!</strong> You successfully removed thread.');
-										$location.path('/threads');
-										$scope.fetch();
-							}, function (res) {
-										// fail
-										Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
-										console.log('[FAIL] threads/thread remove');
-							});
-				};
+		$scope.remove = function (threadId) {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
 
-				$scope.messages = function (threadId) {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
-
-							$location.path('/thread/' + threadId);
-				};
-
-				$scope.createThread = function () {
-							if (!auth.isAuth()) {
-										$location.path('/login');
-							}
-
-							$location.path('/thread');
-				};
-
+			$http.delete(GW_DELETE_THREAD_URL + threadId + '/').then(function (res) {
+				// success
+				Flash.create('success', '<strong>Well done!</strong> You successfully removed thread.');
+				$location.path('/threads');
 				$scope.fetch();
+			}, function (res) {
+				// fail
+				Flash.create('warning', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+				console.log('[FAIL] threads/thread remove');
+			});
+		};
+
+		$scope.messages = function (threadId) {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
+
+			$location.path('/thread/' + threadId);
+		};
+
+		$scope.createThread = function () {
+			if (!auth.isAuth()) {
+				$location.path('/login');
+			}
+
+			$location.path('/thread');
+		};
+
+		$scope.fetch();
 	}]);
 
 /***/ },
@@ -46807,7 +46859,7 @@
 
 	'use strict';
 
-	var GW_CREATE_MESSAGE_URL = "http://private-c7d92-pwx.apiary-mock.com/messages/";
+	var GW_CREATE_MESSAGE_URL = "https://api.sf.sd2.cz/messages/";
 
 	angular.module('simpleForum.message', ['ngRoute']).config(['$routeProvider', function ($routeProvider) {
 			$routeProvider.when('/message', {
@@ -46822,11 +46874,14 @@
 					}
 
 					var threadId = $location.search()['thread'];
-					var authorId = 1; //auth.getUser.id
 
-					$http.post(GW_CREATE_MESSAGE_URL, JSON.stringify({ 'author': authorId, 'thread': threadId, 'content': $scope.messageContent })).then(function (res) {
+					$http.post(GW_CREATE_MESSAGE_URL, JSON.stringify({ 'threadId': threadId, 'content': $scope.messageContent })).then(function (res) {
 							// success
-							Flash.create('success', '<strong>Well done!</strong> You successfully created new message.');
+							if (res.status == 201) {
+									Flash.create('success', '<strong>Well done!</strong> You successfully created new message.');
+							} else {
+									Flash.create('danger', '<strong>Oooops!</strong> Some error occurred. Try it again.');
+							}
 							$location.replace();
 							$location.search('thread', null);
 							$location.path('/thread/' + threadId);
